@@ -1,5 +1,5 @@
 import { uniq } from 'ramda';
-import { GraphData, GraphNode, Link } from '../pages/graphData';
+import { GraphData, GraphNode, Link } from "./graphData";
 import { Spec } from './specNetwork';
 
 export function adaptSpecs(specs: Spec[]): GraphData {

@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 import React from 'react';
 import * as d3 from 'd3';
 import styles from '../styles/Graph.module.css';
-import { GraphData } from '../pages/graphData';
+import { GraphData } from "../services/graphData";
 
 function runForceGraph(container, linksData, nodesData, nodeHoverTooltip) {
   const links = linksData.map(d => Object.assign({}, d));
