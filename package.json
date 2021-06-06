@@ -14,6 +14,8 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "@react-three/drei": "^6.0.0",
+    "@react-three/fiber": "^6.2.2",
     "@types/d3": "^5.16.3",
     "@types/styled-components": "^5.1.4",
     "components": "^0.1.0",
@@ -21,16 +23,17 @@
     "electron": "^10.1.5",
     "next": "9.5.5",
     "ramda": "^0.27.1",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "styled": "^1.0.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "styled": "^1.0.0",
+    "three": "^0.129.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@storybook/addon-actions": "^6.1.11",
-    "@storybook/addon-essentials": "^6.1.11",
-    "@storybook/addon-links": "^6.1.11",
-    "@storybook/react": "^6.1.11",
+    "@storybook/addon-actions": "^6.3.0-beta.14",
+    "@storybook/addon-essentials": "^6.3.0-beta.14",
+    "@storybook/addon-links": "^6.3.0-beta.14",
+    "@storybook/react": "^6.3.0-beta.14",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
     "@types/jest": "^26.0.15",
