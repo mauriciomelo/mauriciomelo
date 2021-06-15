@@ -1,0 +1,30 @@
+orbs:
+  node: circleci/node@4.5.0
+
+version: 2.1
+
+workflows:
+  deploy:
+    jobs:
+      - node/test:
+          name: test
+      - deploy:
+          requires:
+            - test
+
+jobs:
+  deploy:
+    executor:
+      name: node/default
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a8:28:9e:35:af:4f:7e:e7:3c:05:97:cd:ed:4e:64:2d"
+      - checkout
+      - node/install-packages
+      - run:
+          command: git config --global user.email circleci@circleci && git config --global user.name CircleCI
+          name: set git commiter
+      - run:
+          command: npm run deploy
+          name: Deploy

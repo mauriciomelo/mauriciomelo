@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+# atorybook
+/storybook-static
+
 # production
 /build
 
