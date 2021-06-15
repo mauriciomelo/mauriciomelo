@@ -6,31 +6,36 @@ export type BookProps = {
   height: number;
   depth: number;
   position: [number, number, number];
-  frontCoverUrl?: string;
-  backCoverUrl?: string;
+  cover?: string;
+  backCover?: string;
 };
 
 export function Book(props: BookProps) {
-  const { position, width, height, depth, frontCoverUrl, backCoverUrl } = props;
+  const { position, width, height, depth, cover, backCover } = props;
 
-  const frontCoverTexture = useTexture(frontCoverUrl);
-  const backCoverTexture = useTexture(backCoverUrl);
+  const frontCoverTexture = useTexture(cover);
+  const backCoverTexture = useTexture(backCover);
 
   return (
-    <mesh position={position} scale={0.3}>
-      <boxGeometry args={[width, height, depth]} />
-      <meshBasicMaterial
+    <mesh position={position} castShadow receiveShadow>
+      <boxGeometry name="book" args={[width, height, depth]} />
+      <meshStandardMaterial
+        roughness={0.1}
+        metalness={0.3}
+        attachArray="material"
+        map={backCoverTexture}
+      />
+      <meshStandardMaterial
+        roughness={0.1}
+        metalness={0.3}
         attachArray="material"
         map={frontCoverTexture}
-        roughness={0.3}
-        metalness={0.9}
       />
-      <meshBasicMaterial attachArray="material" map={backCoverTexture} />
 
+      <meshStandardMaterial attachArray="material" color="white" />
       <meshStandardMaterial attachArray="material" color="white" />
       <meshStandardMaterial attachArray="material" color="white" />
       <meshStandardMaterial attachArray="material" color="#912f0c" />
-      <meshStandardMaterial attachArray="material" color="white" />
     </mesh>
   );
 }
@@ -40,11 +45,9 @@ const defaultProps: Partial<BookProps> = {
   width: 3.23,
   height: 23,
   depth: 15.8,
-  frontCoverUrl:
-    "https://images-na.ssl-images-amazon.com/images/I/612-pygu-NL.jpg",
+  cover: "https://images-na.ssl-images-amazon.com/images/I/612-pygu-NL.jpg",
 
-  backCoverUrl:
-    "https://images-na.ssl-images-amazon.com/images/I/71Dtwko9OyL.jpg",
+  backCover: "https://images-na.ssl-images-amazon.com/images/I/71Dtwko9OyL.jpg",
 };
 
 Book.defaultProps = defaultProps;
