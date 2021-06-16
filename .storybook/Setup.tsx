@@ -7,7 +7,8 @@ import { OrbitControls } from "../components/OrbitControl";
 export function Setup({
   children,
   cameraFov = 75,
-  cameraPosition = new THREE.Vector3(-85, 22, -5),
+  // cameraPosition = new THREE.Vector3(-85, 22, -5),
+  cameraPosition = new THREE.Vector3(0, 0, 200),
   cameraRotation = new THREE.Vector3(32, 40, -22),
   lights = true,
   axesHelper = true,
@@ -21,7 +22,7 @@ export function Setup({
         shadows
         camera={{
           position: cameraPosition,
-          rotation: cameraRotation,
+          // rotation: cameraRotation,
           fov: cameraFov,
         }}
       >

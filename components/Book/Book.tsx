@@ -35,7 +35,12 @@ export function Book(props: BookProps) {
       <meshStandardMaterial attachArray="material" color="white" />
       <meshStandardMaterial attachArray="material" color="white" />
       <meshStandardMaterial attachArray="material" color="white" />
-      <meshStandardMaterial attachArray="material" color="#912f0c" />
+      <meshStandardMaterial
+        roughness={0.1}
+        metalness={0.3}
+        attachArray="material"
+        color="#912f0c"
+      />
     </mesh>
   );
 }

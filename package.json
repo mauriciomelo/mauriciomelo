@@ -17,6 +17,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@react-three/drei": "^6.0.0",
     "@react-three/fiber": "^6.2.2",
+    "@react-three/flex": "^0.6.0",
     "@types/d3": "^5.16.3",
     "@types/styled-components": "^5.1.4",
     "axios": "^0.21.1",

@@ -2,17 +2,22 @@ import * as React from "react";
 import * as THREE from "three";
 import { Book, BookProps } from "./Book";
 import { Setup } from "../../.storybook/Setup";
-import { Suspense } from "react";
 import { useHelper } from "@react-three/drei";
 import axios from "axios";
 import csv from "csvtojson";
-import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "../OrbitControl";
+import { Flex, Box } from "@react-three/flex/dist/index.cjs";
+import { Shelf } from "./Shelf";
 
 export default {
   title: "Book",
   component: Setup,
 };
+
+const volume = (x) => x.width * x.height * x.depth;
+const byVolume = (a, b) => volume(b) - volume(a);
+const byHeight = (a, b) => b.height - a.height;
+const byPageCount = (a, b) => b.pages - a.pages;
 
 const book1: BookProps = {
   position: [0, 4.4, 0],
@@ -188,60 +193,8 @@ export function Main(args: BookProps) {
   );
 }
 
-function Shelf({
-  children,
-  position = [0, 0, 0],
-  width = 15,
-  height = 2,
-  depth = 160,
-  ...rest
-}) {
-  const [x, y, z] = position;
+Main.args = book1;
 
-  const books = React.Children.toArray(
-    children
-  ) as React.DetailedReactHTMLElement<any, HTMLElement>[];
-  let total = 0;
-  const spaceBetween = 5;
-  const bookPositions = books.reduce((acc, book, index) => {
-    const isLast = index === books.length - 1;
-    const space = isLast ? 0 : spaceBetween;
-    if (index === 0) {
-      total += 2 * book.props.depth + space;
-      return [book.props.depth / 2];
-    }
-    acc.push(total / 2 + book.props.depth / 2);
-    total += book.props.depth * 2 + space;
-    return acc;
-  }, []);
-
-  return (
-    <mesh position={position} receiveShadow castShadow {...rest}>
-      <Suspense fallback={null}>
-        {books.map((child, index) => {
-          return React.cloneElement(
-            child,
-            {
-              position: [
-                x - child.props.width / 2,
-                y + height / 2 + child.props.height / 2,
-                bookPositions[index] - total / 4,
-              ],
-            },
-            null
-          );
-        })}
-      </Suspense>
-
-      <Surface
-        position={position}
-        width={width}
-        height={height}
-        depth={total / 2}
-      />
-    </mesh>
-  );
-}
 async function getBooks() {
   const { data } = await axios.get("/goodreads_library_export.csv", {
     responseType: "text",
@@ -271,62 +224,34 @@ function useLight() {
   return ref;
 }
 
-function List() {
+function StoryControls({ children }) {
   const topLightRef = useLight();
   const keyLightRef = useLight();
   const bgLightRef = useLight();
 
-  const volume = (x) => x.width * x.height * x.depth;
-  const byVolume = (a, b) => volume(a) - volume(b);
-  const byHeight = (a, b) => a.height - b.height;
-  const byPageCount = (a, b) => a.pages - b.pages;
-  const camera = useThree(({ camera }) => camera);
-
-  useFrame(() => {
-    console.log(camera.position);
-    console.log(camera.rotation);
-  });
-
   return (
     <>
-      <Shelf position={[0, 30, 0]}>
-        {myBooks.sort(byPageCount).map((book, index) => (
-          <Book key={index} {...book} />
-        ))}
-      </Shelf>
-
-      <Shelf position={[0, 15, 0]}>
-        {myBooks.sort(byVolume).map((book, index) => (
-          <Book key={index} {...book} />
-        ))}
-      </Shelf>
-
-      <Shelf position={[0, 0, 0]} rotation={[0, THREE.Math.degToRad(360), 0]}>
-        {myBooks.sort(byHeight).map((book, index) => (
-          <Book key={index} {...book} />
-        ))}
-      </Shelf>
-
+      {children}
       <OrbitControls autoRotate={false} />
 
       <pointLight
         ref={topLightRef}
-        intensity={1}
-        position={[-500, 350, 50]}
+        intensity={0.7}
+        position={[100, 300, 150]}
         castShadow
       />
 
       <pointLight
         ref={keyLightRef}
         intensity={0.4}
-        position={[-200, 90, -50]}
+        position={[0, 0, 100]}
         castShadow
       />
 
       <pointLight
         ref={bgLightRef}
         intensity={1}
-        position={[200, 90, -50]}
+        position={[0, 10, -100]}
         castShadow
       />
 
@@ -334,26 +259,64 @@ function List() {
     </>
   );
 }
-
-function Surface({ width, height, depth, position }) {
+export function ShelfItem({ cover, coverRotation, ...rest }) {
   return (
-    <mesh position={position} receiveShadow castShadow>
-      <boxGeometry name="surface" args={[width, height, depth]} />
-      <meshStandardMaterial
-        roughness={0.7}
-        metalness={0}
-        attach="material"
-        color="#3e0000"
-      />
-    </mesh>
-  );
-}
-export function ListSt() {
-  return (
-    <Setup lights={false} orbitControls={false} axesHelper={false}>
-      <List />
+    <Setup lights={false} orbitControls={false} axesHelper={true}>
+      <StoryControls {...rest}>
+        <Shelf cover={cover} coverRotation={coverRotation}>
+          {myBooks.sort(byVolume).map((book, index) => (
+            <Book key={index} {...book} />
+          ))}
+        </Shelf>
+      </StoryControls>
     </Setup>
   );
 }
+ShelfItem.args = {
+  cover: true,
+  coverRotation: 60,
+};
 
-Main.args = book1;
+ShelfItem.argTypes = {
+  coverRotation: {
+    control: {
+      type: "range",
+      min: 0,
+      max: 180,
+    },
+  },
+};
+
+export function ShelfList() {
+  return (
+    <Setup lights={false} orbitControls={false} axesHelper={true}>
+      <StoryControls>
+        <Flex>
+          <Box>
+            <Shelf cover={false} coverRotation={0}>
+              {myBooks.sort(byVolume).map((book, index) => (
+                <Book key={index} {...book} />
+              ))}
+            </Shelf>
+          </Box>
+
+          <Box marginTop={5}>
+            <Shelf cover={true} coverRotation={90}>
+              {myBooks.sort(byVolume).map((book, index) => (
+                <Book key={index} {...book} />
+              ))}
+            </Shelf>
+          </Box>
+
+          <Box marginTop={5}>
+            <Shelf coverRotation={60} cover={true}>
+              {myBooks.sort(byVolume).map((book, index) => (
+                <Book key={index} {...book} />
+              ))}
+            </Shelf>
+          </Box>
+        </Flex>
+      </StoryControls>
+    </Setup>
+  );
+}
