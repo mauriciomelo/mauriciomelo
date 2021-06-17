@@ -2,23 +2,18 @@ import * as React from "react";
 import * as THREE from "three";
 import { Book, BookProps } from "./Book";
 import { Setup } from "../../.storybook/Setup";
-import {
-  Plane,
-  useHelper,
-  useNormalTexture,
-  useTexture,
-} from "@react-three/drei";
+import { useHelper } from "@react-three/drei";
 import { OrbitControls } from "../OrbitControl";
 import { Flex, Box } from "@react-three/flex/dist/index.cjs";
 import { Shelf } from "./Shelf";
 import { myBooks } from "./myBooks";
+import { Wall } from "./Wall";
+import { Floor } from "./Floor";
 
 export default {
   title: "Book",
   component: Setup,
 };
-
-const { degToRad } = THREE.Math;
 
 const volume = (x) => x.width * x.height * x.depth;
 const byVolume = (a, b) => volume(b) - volume(a);
@@ -83,7 +78,7 @@ function StoryControls({ children }) {
         ref={keyLightRef}
         intensity={1}
         decay={2}
-        position={[50, 150, 200]}
+        position={[-20, 150, 130]}
         castShadow
       />
 
@@ -179,7 +174,15 @@ export function Room() {
 
           <Box marginTop={5}>
             <Shelf coverRotation={60} cover={true}>
-              {myBooks.sort(byVolume).map((book, index) => (
+              {myBooks.sort(byHeight).map((book, index) => (
+                <Book key={index} {...book} />
+              ))}
+            </Shelf>
+          </Box>
+
+          <Box marginTop={5}>
+            <Shelf coverRotation={60} cover={true}>
+              {myBooks.sort(byPageCount).map((book, index) => (
                 <Book key={index} {...book} />
               ))}
             </Shelf>
@@ -187,65 +190,5 @@ export function Room() {
         </Flex>
       </StoryControls>
     </Setup>
-  );
-}
-function Floor() {
-  const texture = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_basecolor.jpg"
-  );
-  const roughness = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_roughness.jpg"
-  );
-  const aoTexture = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_ambientOcclusion.jpg"
-  );
-
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  const repeat = 8;
-  texture.repeat.set(repeat, repeat);
-
-  const width = 1000;
-  const height = 600;
-  return (
-    // @ts-ignore
-    <Plane
-      args={[width, height]}
-      rotation={[degToRad(-90), 0, 0]}
-      position={[0, -100, height / 2]}
-      receiveShadow
-    >
-      <meshStandardMaterial
-        roughnessMap={roughness}
-        aoMap={aoTexture}
-        map={texture}
-      />
-    </Plane>
-  );
-}
-
-function Wall() {
-  const repeat = 20;
-  const [normalMap] = useNormalTexture(
-    63, // index of the normal texture - https://github.com/emmelleppi/normal-maps/blob/master/normals.json
-    {
-      offset: [0, 0],
-      repeat: [repeat, repeat],
-      anisotropy: 8,
-    }
-  );
-
-  const width = 1000;
-  const height = 600;
-  return (
-    // @ts-ignore
-    <Plane args={[width, height]} position={[0, height / 4, 0]} receiveShadow>
-      <meshStandardMaterial
-        color="#202020"
-        roughness={0.6}
-        metalness={0.3}
-        normalMap={normalMap}
-      />
-    </Plane>
   );
 }
