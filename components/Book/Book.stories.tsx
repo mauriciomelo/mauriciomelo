@@ -54,7 +54,7 @@ function useLight() {
 function StoryControls({ children }) {
   const topLightRef = useLight();
   const keyLightRef = useLight();
-  const bgLightRef = useLight();
+  const leftLightRef = useLight();
 
   return (
     <>
@@ -71,17 +71,19 @@ function StoryControls({ children }) {
       />
 
       <pointLight
-        ref={keyLightRef}
+        ref={leftLightRef}
         intensity={1}
         decay={2}
-        position={[50, 150, 200]}
+        color="#ffce8e"
+        position={[-100, 150, 20]}
         castShadow
       />
 
       <pointLight
-        ref={bgLightRef}
-        intensity={0}
-        position={[0, 200, -300]}
+        ref={keyLightRef}
+        intensity={1}
+        decay={2}
+        position={[50, 150, 200]}
         castShadow
       />
 
