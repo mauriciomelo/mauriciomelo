@@ -30,7 +30,7 @@ function Surface({ width, height, depth }) {
         aoMap={aoTexture}
         normalMap={normal}
         map={texture}
-        color="#584630"
+        color="#443a2c"
         attach="material"
       />
     </mesh>
