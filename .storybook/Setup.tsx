@@ -4,12 +4,11 @@ import { Canvas } from "@react-three/fiber";
 import { Box } from "@material-ui/core";
 import { OrbitControls } from "../components/OrbitControl";
 
+const { degToRad } = THREE.Math;
 export function Setup({
   children,
-  cameraFov = 75,
-  // cameraPosition = new THREE.Vector3(-85, 22, -5),
-  cameraPosition = new THREE.Vector3(0, 0, 200),
-  cameraRotation = new THREE.Vector3(32, 40, -22),
+  cameraFov = 90,
+  cameraPosition = new THREE.Vector3(0, 20, 150),
   lights = true,
   axesHelper = true,
   orbitControls = true,
@@ -22,7 +21,6 @@ export function Setup({
         shadows
         camera={{
           position: cameraPosition,
-          // rotation: cameraRotation,
           fov: cameraFov,
         }}
       >

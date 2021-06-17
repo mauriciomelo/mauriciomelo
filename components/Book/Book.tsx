@@ -39,7 +39,7 @@ export function Book(props: BookProps) {
         roughness={0.1}
         metalness={0.3}
         attachArray="material"
-        color="#912f0c"
+        color="#252525"
       />
     </mesh>
   );

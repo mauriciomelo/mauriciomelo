@@ -1,16 +1,37 @@
 import * as React from "react";
 import * as THREE from "three";
 import { Flex, Box } from "@react-three/flex/dist/index.cjs";
+import { useTexture } from "@react-three/drei";
 
 function Surface({ width, height, depth }) {
+  const texture = useTexture(
+    "/deva/textures/wood/Wood_Plywood_Front_001_basecolor.jpg"
+  );
+  const roughness = useTexture(
+    "/deva/textures/wood/Wood_Plywood_Front_001_roughness.jpg"
+  );
+  const normal = useTexture(
+    "/deva/textures/wood/Wood_Plywood_Front_001_normal.jpg"
+  );
+  const aoTexture = useTexture(
+    "/deva/textures/wood/Wood_Plywood_Front_001_ambientOcclusion.jpg"
+  );
+
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  const repeat = 1;
+  texture.repeat.set(repeat, repeat);
+
   return (
     <mesh receiveShadow castShadow>
       <boxGeometry name="surface" args={[width, height, depth]} />
       <meshStandardMaterial
-        roughness={0.7}
-        metalness={0}
+        roughnessMap={roughness}
+        aoMap={aoTexture}
+        normalMap={normal}
+        map={texture}
+        color="#6d422a"
         attach="material"
-        color="#3e0000"
       />
     </mesh>
   );
@@ -21,7 +42,7 @@ export function Shelf({
   position = [0, 0, 0],
   width = 50,
   height = 2,
-  depth = 15,
+  depth = 30,
   cover = true,
   coverRotation = 90,
 }) {
