@@ -2,7 +2,7 @@ import * as React from "react";
 import * as THREE from "three";
 import { Book, BookProps } from "./Book";
 import { Setup } from "../../.storybook/Setup";
-import { useHelper } from "@react-three/drei";
+import { useFBX, useHelper } from "@react-three/drei";
 import { OrbitControls } from "../OrbitControl";
 import { Flex, Box } from "@react-three/flex/dist/index.cjs";
 import { Shelf } from "./Shelf";
@@ -154,6 +154,7 @@ export function Room() {
       <StoryControls>
         <Wall />
         <Floor />
+        <Plant position={[-80, -100, 20]} scale={0.07} />
 
         <Flex position={[-100, 60, 15]}>
           <Box>
@@ -190,5 +191,26 @@ export function Room() {
         </Flex>
       </StoryControls>
     </Setup>
+  );
+}
+
+function Plant({ position = [0, 0, 0], scale = 0.05 }) {
+  const object = useFBX("/deva/models/plant.fbx");
+
+  object.castShadow = true;
+  object.receiveShadow = true;
+  object.traverse((children) => {
+    if (children instanceof THREE.Mesh) {
+      children.castShadow = true;
+      children.receiveShadow = true;
+    }
+  });
+  return (
+    <primitive
+      position={position}
+      scale={scale}
+      object={object}
+      dispose={null}
+    />
   );
 }
