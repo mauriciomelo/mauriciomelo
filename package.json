@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "electron": "electron electron.js",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -s ./public -p 6006",
     "deploy": " rm -rf node_modules/.cache && next build && next export && npm run build-storybook && mv storybook-static out/storybook && touch out/.nojekyll && gh-pages -d out --dotfiles=true",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook -s ./public"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

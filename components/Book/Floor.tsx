@@ -1,17 +1,18 @@
 import * as React from "react";
 import * as THREE from "three";
 import { Plane, useTexture } from "@react-three/drei";
+import { publicUrl } from "../../src/publicUrl";
 const { degToRad } = THREE.Math;
 
 export function Floor() {
   const texture = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_basecolor.jpg"
+    publicUrl("/textures/floor/Wood_Floor_009_basecolor.jpg")
   );
   const roughness = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_roughness.jpg"
+    publicUrl("/textures/floor/Wood_Floor_009_roughness.jpg")
   );
   const aoTexture = useTexture(
-    "/deva/textures/floor/Wood_Floor_009_ambientOcclusion.jpg"
+    publicUrl("/textures/floor/Wood_Floor_009_ambientOcclusion.jpg")
   );
 
   texture.wrapS = THREE.RepeatWrapping;

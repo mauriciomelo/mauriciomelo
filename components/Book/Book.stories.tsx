@@ -2,18 +2,25 @@ import * as React from "react";
 import * as THREE from "three";
 import { Book, BookProps } from "./Book";
 import { Setup } from "../../.storybook/Setup";
-import { useFBX, useHelper } from "@react-three/drei";
+import { useHelper } from "@react-three/drei";
 import { OrbitControls } from "../OrbitControl";
 import { Flex, Box } from "@react-three/flex/dist/index.cjs";
 import { Shelf } from "./Shelf";
 import { myBooks } from "./myBooks";
 import { Wall } from "./Wall";
 import { Floor } from "./Floor";
+import { Plant } from "./Plant";
 
 export default {
   title: "Book",
   component: Setup,
 };
+
+const buildBooks = (n) =>
+  Array(Math.ceil(n / myBooks.length) || 1)
+    .fill(myBooks)
+    .flat()
+    .slice(0, n);
 
 const volume = (x) => x.width * x.height * x.depth;
 const byVolume = (a, b) => volume(b) - volume(a);
@@ -30,7 +37,7 @@ const book1: BookProps = {
   backCover: "https://images-na.ssl-images-amazon.com/images/I/71Dtwko9OyL.jpg",
 };
 
-export function Main(args: BookProps) {
+export function BookSt(args: BookProps) {
   return (
     <Setup>
       <Book {...args} />
@@ -38,15 +45,15 @@ export function Main(args: BookProps) {
   );
 }
 
-Main.args = book1;
-
+BookSt.args = book1;
+BookSt.storyName = "Book";
 function useLight() {
   const ref = React.useRef();
   useHelper(ref, THREE.PointLightHelper);
   return ref;
 }
 
-function StoryControls({ children }) {
+function StoryControls({ autoRotate, children }) {
   const topLightRef = useLight();
   const keyLightRef = useLight();
   const leftLightRef = useLight();
@@ -54,7 +61,7 @@ function StoryControls({ children }) {
   return (
     <>
       {children}
-      <OrbitControls autoRotate={false} />
+      <OrbitControls autoRotate={autoRotate} />
 
       <pointLight
         ref={topLightRef}
@@ -86,25 +93,16 @@ function StoryControls({ children }) {
     </>
   );
 }
-export function ShelfItem({ cover, coverRotation, ...rest }) {
-  return (
-    <Setup lights={false} orbitControls={false} axesHelper={true}>
-      <StoryControls {...rest}>
-        <Shelf cover={cover} coverRotation={coverRotation}>
-          {myBooks.sort(byVolume).map((book, index) => (
-            <Book key={index} {...book} />
-          ))}
-        </Shelf>
-      </StoryControls>
-    </Setup>
-  );
-}
-ShelfItem.args = {
+
+const defaultStoryArgs = {
   cover: true,
   coverRotation: 60,
-};
+  booksNumber: 31,
+  autoRotate: true,
+  showAxes: false,
+} as const;
 
-ShelfItem.argTypes = {
+const defaultStoryArgTypes = {
   coverRotation: {
     control: {
       type: "range",
@@ -112,78 +110,64 @@ ShelfItem.argTypes = {
       max: 180,
     },
   },
+
+  booksNumber: {
+    control: {
+      type: "range",
+      min: 0,
+      max: 600,
+    },
+  },
 };
-
-export function ShelfList() {
+export function ShelfSt({
+  cover,
+  booksNumber,
+  coverRotation,
+  showAxes,
+  ...rest
+}: typeof defaultStoryArgs) {
   return (
-    <Setup lights={false} orbitControls={false} axesHelper={true}>
-      <StoryControls>
-        <Flex>
-          <Box>
-            <Shelf cover={false} coverRotation={0}>
-              {myBooks.sort(byVolume).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-
-          <Box marginTop={5}>
-            <Shelf cover={true} coverRotation={90}>
-              {myBooks.sort(byVolume).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-
-          <Box marginTop={5}>
-            <Shelf coverRotation={60} cover={true}>
-              {myBooks.sort(byVolume).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-        </Flex>
+    <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
+      <StoryControls {...rest}>
+        <Shelf
+          position={[-100, 100, 15]}
+          cover={cover}
+          coverRotation={coverRotation}
+        >
+          {buildBooks(booksNumber).map((book, index) => (
+            <Book key={index} {...book} />
+          ))}
+        </Shelf>
       </StoryControls>
     </Setup>
   );
 }
 
-export function Room() {
+ShelfSt.storyName = "Shelf";
+
+ShelfSt.args = defaultStoryArgs;
+ShelfSt.defaultProps = ShelfSt.args;
+
+ShelfSt.argTypes = defaultStoryArgTypes;
+
+export function Room({
+  showAxes,
+  coverRotation,
+  cover,
+  booksNumber,
+  ...rest
+}: typeof defaultStoryArgs) {
   return (
-    <Setup lights={false} orbitControls={false} axesHelper={false}>
-      <StoryControls>
+    <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
+      <StoryControls {...rest}>
         <Wall />
         <Floor />
-        <Plant position={[-80, -100, 20]} scale={0.07} />
+        <Plant position={[120, -100, 20]} scale={0.07} />
 
-        <Flex position={[-100, 60, 15]}>
-          <Box>
-            <Shelf cover={false} coverRotation={0}>
-              {myBooks.sort(byVolume).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-
+        <Flex position={[-100, 100, 15]}>
           <Box marginTop={5}>
-            <Shelf cover={true} coverRotation={90}>
-              {myBooks.sort(byVolume).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-
-          <Box marginTop={5}>
-            <Shelf coverRotation={60} cover={true}>
-              {myBooks.sort(byHeight).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-
-          <Box marginTop={5}>
-            <Shelf coverRotation={60} cover={true}>
-              {myBooks.sort(byPageCount).map((book, index) => (
+            <Shelf cover={cover} coverRotation={coverRotation}>
+              {buildBooks(booksNumber).map((book, index) => (
                 <Book key={index} {...book} />
               ))}
             </Shelf>
@@ -194,23 +178,6 @@ export function Room() {
   );
 }
 
-function Plant({ position = [0, 0, 0], scale = 0.05 }) {
-  const object = useFBX("/deva/models/plant.fbx");
-
-  object.castShadow = true;
-  object.receiveShadow = true;
-  object.traverse((children) => {
-    if (children instanceof THREE.Mesh) {
-      children.castShadow = true;
-      children.receiveShadow = true;
-    }
-  });
-  return (
-    <primitive
-      position={position}
-      scale={scale}
-      object={object}
-      dispose={null}
-    />
-  );
-}
+Room.args = { ...defaultStoryArgs, autoRotate: false };
+Room.defaultProps = Room.args;
+Room.argTypes = defaultStoryArgTypes;
