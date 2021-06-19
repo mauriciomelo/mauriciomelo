@@ -4,6 +4,7 @@ import { Flex, Box } from "@react-three/flex/dist/index.cjs";
 import { useTexture } from "@react-three/drei";
 import { publicUrl } from "../../src/publicUrl";
 
+const { degToRad } = THREE.Math;
 function Surface({ width, height, depth }) {
   const texture = useTexture(
     publicUrl("/textures/wood/Wood_Plywood_Front_001_basecolor.jpg")
@@ -43,19 +44,22 @@ export function Shelf({
   position = [0, 0, 0],
   height = 2,
   depth = 30,
-  cover = true,
   coverRotation = 90,
 }) {
   const books = React.Children.toArray(
     children
   ) as React.DetailedReactHTMLElement<any, HTMLElement>[];
-  const spaceBetween = cover ? 2 : 0;
-  const rotation = cover ? coverRotation : 180;
+  const angle = quadrantAngle(coverRotation);
+  const spaceBetween = angle > 0 ? 2 : 0;
+
   const surfaceWidth = 200;
   const rowHeight = 30;
 
-  const getBookWidth = (book) =>
-    spaceBetween + (cover ? book.props.depth : book.props.width);
+  const getBookWidth = (book) => {
+    const depthWithAngle = Math.sin(degToRad(angle)) * book.props.depth;
+    const widthWithAngle = Math.sin(degToRad(90 - angle)) * book.props.width;
+    return spaceBetween + depthWithAngle + widthWithAngle;
+  };
 
   const numberOfShelves = numberOfRows(books, getBookWidth, surfaceWidth);
 
@@ -77,7 +81,7 @@ export function Shelf({
             marginRight={spaceBetween}
             alignItems="flex-end"
             justifyContent="flex-end"
-            rotation={[0, THREE.Math.degToRad(rotation), 0]}
+            rotation={[0, degToRad(coverRotation), 0]}
             key={index}
           >
             <Box centerAnchor>{child}</Box>
@@ -101,6 +105,12 @@ export function Shelf({
     </>
   );
 }
+
+// keep the rotation beween 0 and 90 deg
+function quadrantAngle(rotation: number) {
+  return rotation > 90 ? 180 - rotation : rotation;
+}
+
 function numberOfRows<T>(
   books: T[],
   getBookWidth: (T) => number,

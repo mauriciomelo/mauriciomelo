@@ -95,7 +95,6 @@ function StoryControls({ autoRotate, children }) {
 }
 
 const defaultStoryArgs = {
-  cover: true,
   coverRotation: 60,
   booksNumber: 31,
   autoRotate: true,
@@ -120,7 +119,6 @@ const defaultStoryArgTypes = {
   },
 };
 export function ShelfSt({
-  cover,
   booksNumber,
   coverRotation,
   showAxes,
@@ -129,11 +127,7 @@ export function ShelfSt({
   return (
     <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
       <StoryControls {...rest}>
-        <Shelf
-          position={[-100, 100, 15]}
-          cover={cover}
-          coverRotation={coverRotation}
-        >
+        <Shelf position={[-100, 100, 15]} coverRotation={coverRotation}>
           {buildBooks(booksNumber).map((book, index) => (
             <Book key={index} {...book} />
           ))}
@@ -153,7 +147,6 @@ ShelfSt.argTypes = defaultStoryArgTypes;
 export function Room({
   showAxes,
   coverRotation,
-  cover,
   booksNumber,
   ...rest
 }: typeof defaultStoryArgs) {
@@ -170,7 +163,7 @@ export function Room({
           position={[-100, 0, 15]}
         >
           <Box marginTop={5}>
-            <Shelf cover={cover} coverRotation={coverRotation}>
+            <Shelf coverRotation={coverRotation}>
               {buildBooks(booksNumber).map((book, index) => (
                 <Book key={index} {...book} />
               ))}
@@ -182,6 +175,6 @@ export function Room({
   );
 }
 
-Room.args = { ...defaultStoryArgs, autoRotate: false };
+Room.args = { ...defaultStoryArgs, autoRotate: false, coverRotation: 43 };
 Room.defaultProps = Room.args;
 Room.argTypes = defaultStoryArgTypes;
