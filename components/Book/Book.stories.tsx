@@ -164,7 +164,11 @@ export function Room({
         <Floor />
         <Plant position={[120, -100, 20]} scale={0.07} />
 
-        <Flex position={[-100, 100, 15]}>
+        <Flex
+          alignItems="flex-start"
+          justifyContent="flex-end"
+          position={[-100, 0, 15]}
+        >
           <Box marginTop={5}>
             <Shelf cover={cover} coverRotation={coverRotation}>
               {buildBooks(booksNumber).map((book, index) => (
