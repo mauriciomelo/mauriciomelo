@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { Flex, Box } from "@react-three/flex/dist/index.cjs";
 import { useTexture } from "@react-three/drei";
 import { publicUrl } from "../../src/publicUrl";
+import { quadrantAngle } from "./quadrantAngle";
 
 const { degToRad } = THREE.Math;
 function Surface({ width, height, depth }) {
@@ -104,11 +105,6 @@ export function Shelf({
       </Flex>
     </>
   );
-}
-
-// keep the rotation beween 0 and 90 deg
-function quadrantAngle(rotation: number) {
-  return rotation > 90 ? 180 - rotation : rotation;
 }
 
 function numberOfRows<T>(
