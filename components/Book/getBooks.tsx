@@ -1,6 +1,16 @@
 import axios from "axios";
 import csv from "csvtojson";
 
+export interface Book {
+  title: string;
+  author: string;
+  pages: number;
+  isbn: string;
+  dimentions: string;
+  cover: string;
+  backCover: string;
+}
+
 async function getBooks() {
   const { data } = await axios.get("/goodreads_library_export.csv", {
     responseType: "text",

@@ -7,6 +7,7 @@ export type BookProps = {
   depth: number;
   position: [number, number, number];
   cover?: string;
+  onClick?: () => void;
   backCover?: string;
 };
 
@@ -17,7 +18,7 @@ export function Book(props: BookProps) {
   const backCoverTexture = useTexture(backCover);
 
   return (
-    <mesh position={position} castShadow receiveShadow>
+    <mesh onClick={props.onClick} position={position} castShadow receiveShadow>
       <boxGeometry name="book" args={[width, height, depth]} />
       <meshStandardMaterial
         roughness={0.1}

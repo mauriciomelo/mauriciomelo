@@ -1,15 +1,19 @@
 import * as React from "react";
 import * as THREE from "three";
+import produce from "immer";
 import { Book, BookProps } from "./Book";
 import { Setup } from "../../.storybook/Setup";
 import { useHelper } from "@react-three/drei";
 import { OrbitControls } from "../OrbitControl";
-import { Flex, Box } from "@react-three/flex/dist/index.cjs";
+import { Flex, Box as FlexBox } from "@react-three/flex/dist/index.cjs";
 import { Shelf } from "./Shelf";
-import { myBooks } from "./myBooks";
+import { myBooks, parseDimentions } from "./myBooks";
 import { Wall } from "./Wall";
 import { Floor } from "./Floor";
 import { Plant } from "./Plant";
+import { EditBook } from "./EditBook";
+import { Box } from "@material-ui/core";
+import { Book as EditBookProps } from "./getBooks";
 
 export default {
   title: "Book",
@@ -150,28 +154,78 @@ export function Room({
   booksNumber,
   ...rest
 }: typeof defaultStoryArgs) {
-  return (
-    <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
-      <StoryControls {...rest}>
-        <Wall />
-        <Floor />
-        <Plant position={[120, -100, 20]} scale={0.07} />
+  const [books, setBooks] = React.useState(buildBooks(booksNumber));
+  const [bookToEdit, editBook] = React.useState<EditBookProps | null>(null);
 
-        <Flex
-          alignItems="flex-start"
-          justifyContent="flex-end"
-          position={[-100, 0, 15]}
-        >
-          <Box marginTop={5}>
-            <Shelf coverRotation={coverRotation}>
-              {buildBooks(booksNumber).map((book, index) => (
-                <Book key={index} {...book} />
-              ))}
-            </Shelf>
-          </Box>
-        </Flex>
-      </StoryControls>
-    </Setup>
+  const handleEdit = React.useCallback(
+    (book: EditBookProps) => {
+      const nextState = produce(books, (draft) => {
+        const index = books.findIndex((b) => b.isbn === book.isbn);
+        draft[index] = { ...book, ...parseDimentions(book.dimentions) };
+      });
+      setBooks(nextState);
+    },
+    [books]
+  );
+
+  const handleEditClose = React.useCallback(() => {
+    editBook(null);
+  }, []);
+
+  const handleSelectBook = React.useCallback(
+    (book: EditBookProps) => () => {
+      editBook(book);
+    },
+    []
+  );
+
+  return (
+    <>
+      <Box
+        bgcolor="rgba(0,0,0, .5)"
+        position="absolute"
+        borderRadius={7}
+        zIndex="100"
+        right={20}
+        m={4}
+        style={{ backdropFilter: "blur(15px)" }}
+      >
+        {bookToEdit && (
+          <EditBook
+            key={bookToEdit.isbn}
+            book={bookToEdit}
+            onChange={handleEdit}
+            onClose={handleEditClose}
+          />
+        )}
+      </Box>
+
+      <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
+        <StoryControls {...rest}>
+          <Wall />
+          <Floor />
+          <Plant position={[120, -100, 20]} scale={0.07} />
+
+          <Flex
+            alignItems="flex-start"
+            justifyContent="flex-end"
+            position={[-100, 0, 15]}
+          >
+            <FlexBox marginTop={5}>
+              <Shelf coverRotation={coverRotation}>
+                {books.map((book, index) => (
+                  <Book
+                    onClick={handleSelectBook(book)}
+                    key={index}
+                    {...book}
+                  />
+                ))}
+              </Shelf>
+            </FlexBox>
+          </Flex>
+        </StoryControls>
+      </Setup>
+    </>
   );
 }
 

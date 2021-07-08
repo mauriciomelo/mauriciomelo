@@ -141,11 +141,7 @@ export const myBooks = [
       "https://images-na.ssl-images-amazon.com/images/I/71Dtwko9OyL.jpg",
   },
 ].map((book) => {
-  const [width, depth, height] = book.dimentions
-    .replace(" cm", "")
-    .split("x")
-    .map((x) => Number(x))
-    .sort((a, b) => a - b);
+  const { width, depth, height } = parseDimentions(book.dimentions);
   return {
     ...book,
     height,
@@ -153,3 +149,12 @@ export const myBooks = [
     depth,
   };
 });
+
+export function parseDimentions(dimentions) {
+  const [width, depth, height] = dimentions
+    .replace(" cm", "")
+    .split("x")
+    .map((x) => Number(x))
+    .sort((a, b) => a - b);
+  return { width, depth, height };
+}

@@ -1,6 +1,7 @@
 import { Box, Button, TextField } from "@material-ui/core";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Book } from "./getBooks";
 
 const fields = [
   { name: "title", label: "Title" },
@@ -16,31 +17,41 @@ const fields = [
   },
 ];
 
-export function EditBook() {
+interface EditBookProps {
+  book?: Book;
+  onChange?: (book: Book) => void;
+  onClose?: () => void;
+}
+export function EditBook(props: EditBookProps) {
   const { control, handleSubmit, watch } = useForm({ mode: "onChange" });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    props.onChange(data);
+  };
+
+  watch((data: Book) => props.onChange(data));
 
   return (
     <Box m={5} maxWidth={300}>
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((f) => (
-          <Controller
-            name={f.name}
-            key={f.name}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label={f.label}
-                placeholder={f.placeholder}
-                variant="outlined"
-                inputProps={field}
-              />
-            )}
-          />
+          <Box key={f.name} marginY={2}>
+            <Controller
+              name={f.name}
+              control={control}
+              defaultValue={props.book[f.name] || ""}
+              render={({ field }) => (
+                <TextField
+                  label={f.label}
+                  placeholder={f.placeholder}
+                  variant="outlined"
+                  inputProps={field}
+                />
+              )}
+            />
+          </Box>
         ))}
 
-        <Button type="submit">Submit</Button>
+        <Button onClick={props.onClose}>Close</Button>
       </form>
     </Box>
   );
