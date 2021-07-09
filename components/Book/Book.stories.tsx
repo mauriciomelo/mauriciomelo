@@ -192,10 +192,6 @@ export function RoomSt({
     []
   );
 
-  React.useEffect(() => {
-    handleSelectBook(books[0]);
-  }, []);
-
   return (
     <>
       <Box
@@ -285,21 +281,39 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
 
 function BookEditMode(props) {
   const { position, ...rest } = props;
+
+  const coverRotation = THREE.Math.degToRad(95);
+  const [rotation, setRotation] = React.useState(coverRotation);
+
   const animationProps = useSpring({
     to: {
       position: [0, 0, 80],
-      rotation: [0, THREE.Math.degToRad(95), 0],
+      rotation: [0, coverRotation, 0],
     },
     from: {
       position: position,
-      rotation: [THREE.Math.degToRad(95), 0, 0],
+      rotation: [coverRotation, 0, 0],
     },
     reset: false,
   });
 
+  const rotationProps = useSpring({
+    to: {
+      rotation: [0, rotation, 0],
+    },
+    from: {
+      rotation: [0, rotation - coverRotation, 0],
+    },
+    reset: false,
+  });
+
+  const handleMove = () => {
+    setRotation(rotation + coverRotation);
+  };
+
   return (
-    <a.mesh {...animationProps}>
-      <Book {...rest} />
+    <a.mesh {...animationProps} {...rotationProps}>
+      <Book {...rest} onPointerDown={handleMove} />
     </a.mesh>
   );
 }
