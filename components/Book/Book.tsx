@@ -1,24 +1,31 @@
 import React from "react";
 import { useTexture } from "@react-three/drei";
+import { ThreeEvent } from "@react-three/fiber";
 
 export type BookProps = {
   width: number;
   height: number;
   depth: number;
-  position: [number, number, number];
+  position?: [number, number, number];
+  rotation?: [number, number, number];
   cover?: string;
-  onClick?: () => void;
+  onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
   backCover?: string;
 };
 
 export function Book(props: BookProps) {
-  const { position, width, height, depth, cover, backCover } = props;
+  const { position, width, height, depth, cover, backCover, rotation } = props;
 
   const frontCoverTexture = useTexture(cover);
   const backCoverTexture = useTexture(backCover);
-
   return (
-    <mesh onClick={props.onClick} position={position} castShadow receiveShadow>
+    <mesh
+      onPointerDown={props.onPointerDown}
+      position={position}
+      rotation={rotation}
+      castShadow
+      receiveShadow
+    >
       <boxGeometry name="book" args={[width, height, depth]} />
       <meshStandardMaterial
         roughness={0.1}

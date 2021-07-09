@@ -1,8 +1,8 @@
 import React from "react";
-import { Room } from "../components/Book/Book.stories";
+import { RoomSt } from "../components/Book/Book.stories";
 
 const BooksPage = () => {
-  return <Room />;
+  return <RoomSt />;
 };
 
 export default BooksPage;
