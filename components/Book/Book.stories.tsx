@@ -194,24 +194,30 @@ export function RoomSt({
 
   return (
     <>
-      <Box
-        bgcolor="rgba(0,0,0, .5)"
-        position="absolute"
-        borderRadius={7}
-        zIndex="100"
-        right={20}
-        m={4}
-        style={{ backdropFilter: "blur(15px)" }}
-      >
-        {editBook && (
-          <EditBook
-            key={editBook.isbn}
-            book={editBook}
-            onChange={handleEdit}
-            onClose={handleEditClose}
-          />
-        )}
-      </Box>
+      {editBook && (
+        <Box
+          bgcolor="rgba(0,0,0, .5)"
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          borderRadius={7}
+          height="100%"
+          zIndex="100"
+          top={0}
+          right={0}
+          p={4}
+          style={{ backdropFilter: "blur(15px)" }}
+        >
+          <Box m="auto">
+            <EditBook
+              key={editBook.isbn}
+              book={editBook}
+              onChange={handleEdit}
+              onClose={handleEditClose}
+            />
+          </Box>
+        </Box>
+      )}
 
       <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
         <StoryControls {...rest}>
@@ -245,7 +251,7 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
 
   useFrame((state) => {
     if (zoom) {
-      state.camera.position.lerp(new THREE.Vector3(15, 1, 100), step);
+      state.camera.position.lerp(new THREE.Vector3(10, 1, 100), step);
     }
     state.camera.lookAt(0, 0, 0);
     state.camera.updateProjectionMatrix();
@@ -282,7 +288,7 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
 function BookEditMode(props) {
   const { position, ...rest } = props;
 
-  const coverRotation = THREE.Math.degToRad(95);
+  const coverRotation = THREE.Math.degToRad(85);
   const [rotation, setRotation] = React.useState(coverRotation);
 
   const animationProps = useSpring({
@@ -291,7 +297,7 @@ function BookEditMode(props) {
       rotation: [0, coverRotation, 0],
     },
     from: {
-      position: position,
+      position: [position[0], position[1] + 10, position[2]],
       rotation: [coverRotation, 0, 0],
     },
     reset: false,

@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@material-ui/core";
+import { Box, Button, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Book } from "./getBooks";
@@ -32,6 +32,10 @@ export function EditBook(props: EditBookProps) {
 
   return (
     <Box m={5} maxWidth={300}>
+      <Box marginBottom={4}>
+        <Typography variant="overline">Edit Book</Typography>
+      </Box>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((f) => (
           <Box key={f.name} marginY={2}>
