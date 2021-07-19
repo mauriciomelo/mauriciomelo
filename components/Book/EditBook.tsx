@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Book } from "./getBooks";
+import { Book, parseDimentions } from "./getBooks";
 
 const fields = [
   { name: "title", label: "Title" },
@@ -22,13 +22,14 @@ interface EditBookProps {
   onChange?: (book: Book) => void;
   onClose?: () => void;
 }
+
 export function EditBook(props: EditBookProps) {
   const { control, handleSubmit, watch } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
-    props.onChange(data);
+    props.onChange(buildBook(data));
   };
 
-  watch((data: Book) => props.onChange(data));
+  watch((data: Book) => props.onChange(buildBook(data)));
 
   return (
     <Box m={5} maxWidth={300}>
@@ -42,7 +43,7 @@ export function EditBook(props: EditBookProps) {
             <Controller
               name={f.name}
               control={control}
-              defaultValue={props.book[f.name] || ""}
+              defaultValue={getDefaultValue(props.book, f.name)}
               render={({ field }) => (
                 <TextField
                   label={f.label}
@@ -59,4 +60,15 @@ export function EditBook(props: EditBookProps) {
       </form>
     </Box>
   );
+}
+function getDefaultValue(book: Book, fieldName: string): unknown {
+  if (fieldName === "dimentions") {
+    return `${book.width} x ${book.depth} x ${book.height} cm `;
+  }
+  return book[fieldName] || "";
+}
+
+function buildBook(change) {
+  const { dimentions, ...rest } = change;
+  return { ...rest, ...parseDimentions(dimentions) };
 }

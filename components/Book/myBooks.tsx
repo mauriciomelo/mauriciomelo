@@ -1,11 +1,13 @@
-export const myBooks = [
+import { Book, parseDimentions } from "./getBooks";
+
+export const myBooks: Book[] = [
   {
     title:
       "Billions & Billions: Thoughts on Life and Death at the Brink of the Millennium",
     author: "Carl Sagan",
     pages: 296,
     isbn: "9780345379184",
-    dimentions: "18.03 x 12.7 x 1.52 cm",
+    ...parseDimentions("18.03 x 12.7 x 1.52 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/81NaEXIPLDL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/81zQaDaQJ3L.jpg",
@@ -16,7 +18,7 @@ export const myBooks = [
     author: "Yuval Noah Harari",
     pages: 372,
     isbn: "9780525512172",
-    dimentions: "15.24 x 2.39 x 22.86 cm",
+    ...parseDimentions("15.24 x 2.39 x 22.86 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/610s3RW+fML.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/71ZJ1kgxmgL.jpg",
@@ -26,8 +28,7 @@ export const myBooks = [
     author: "Daniel H. Pink",
     pages: 272,
     isbn: "9781594487156",
-    dimentions: "15.75 x 2.54 x 23.62 cm",
-
+    ...parseDimentions("15.75 x 2.54 x 23.62 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/71NE6CvV6xL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/71HcElLpN-L.jpg",
@@ -39,8 +40,7 @@ export const myBooks = [
     author: "Chris Voss",
     pages: 274,
     isbn: "9780062407801",
-
-    dimentions: "3.3 x 16 x 23.11 cm",
+    ...parseDimentions("3.3 x 16 x 23.11 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/81oUPEIf6OL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/81-90tpM84L.jpg",
@@ -51,7 +51,7 @@ export const myBooks = [
     author: "Nicole Forsgren",
     pages: 257,
     isbn: "9781942788331",
-    dimentions: "14.96 x 2.16 x 23.09 cm",
+    ...parseDimentions("14.96 x 2.16 x 23.09 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/610tbJ+V-aL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/610tbJ+V-aL.jpg",
@@ -61,7 +61,7 @@ export const myBooks = [
     author: "Milton Hatoum",
     pages: 292,
     isbn: "9788535900132",
-    dimentions: "17.6 x 12.6 x 1.2 cm",
+    ...parseDimentions("17.6 x 12.6 x 1.2 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/91lzSUbiyhL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/81094q3S83L.jpg",
@@ -71,7 +71,7 @@ export const myBooks = [
     author: "Pirula",
     pages: 256,
     isbn: "9780000185570",
-    dimentions: "23 x 15.4 x 1.4 cm",
+    ...parseDimentions("23 x 15.4 x 1.4 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/91W8tUJE0SL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/81LHgrj8G7L.jpg",
@@ -81,7 +81,7 @@ export const myBooks = [
     author: "Walter Isaacson",
     pages: 600,
     isbn: "9781501139154",
-    dimentions: "23.4 x 16 x 3.6 cm",
+    ...parseDimentions("23.4 x 16 x 3.6 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/71110hGfuvL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/715Tyd6W6nL.jpg",
@@ -92,7 +92,7 @@ export const myBooks = [
     author: "Andreas M. Antonopoulos",
     pages: 298,
     isbn: "9781449374044",
-    dimentions: "17.78 x 1.73 x 23.34 cm",
+    ...parseDimentions("17.78 x 1.73 x 23.34 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/8177WA+ddZL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/51GexiUqHbL.jpg",
@@ -103,7 +103,7 @@ export const myBooks = [
     author: "Khaled Hosseini",
     pages: 365,
     isbn: "9788520917671",
-    dimentions: "19.8 x 13.6 x 1.8 cm",
+    ...parseDimentions("19.8 x 13.6 x 1.8 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/81yVzXTgLzL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/812GHgMZA8L.jpg",
@@ -114,7 +114,7 @@ export const myBooks = [
     author: "Leonard Mlodinow",
     pages: 252,
     isbn: "9780375424045",
-    dimentions: "13.21 x 2.03 x 20.32 cm",
+    ...parseDimentions("13.21 x 2.03 x 20.32 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/91Qt1C+4GuL.jpg",
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/81JQvdTp6iL.jpg",
@@ -124,37 +124,20 @@ export const myBooks = [
     title: "The Black Swan: The Impact of the Highly Improbable",
     author: "Nassim Nicholas Taleb",
     pages: 480,
-    isbn: "9780375424045",
-    dimentions: "13.21 x 2.77 x 20.32 cm",
+    isbn: "8576842122",
+    ...parseDimentions("13.21 x 2.77 x 20.32 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/511ggezsKbS.jpg",
-
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/71oFYvr0XnS.jpg",
   },
   {
     title: "Antifragile: Things That Gain from Disorder",
     author: "Nassim Nicholas Taleb",
-    dimentions: "13.21 x 3.12 x 20.32 cm",
+    isbn: "8547001085",
+    pages: 616,
+    ...parseDimentions("13.21 x 3.12 x 20.32 cm"),
     cover: "https://images-na.ssl-images-amazon.com/images/I/612-pygu-NL.jpg",
-
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/71Dtwko9OyL.jpg",
   },
-].map((book) => {
-  const { width, depth, height } = parseDimentions(book.dimentions);
-  return {
-    ...book,
-    height,
-    width,
-    depth,
-  };
-});
-
-export function parseDimentions(dimentions) {
-  const [width, depth, height] = dimentions
-    .replace(" cm", "")
-    .split("x")
-    .map((x) => Number(x))
-    .sort((a, b) => a - b);
-  return { width, depth, height };
-}
+];

@@ -2,13 +2,12 @@ import * as React from "react";
 import * as THREE from "three";
 import produce from "immer";
 import { useSpring, a } from "@react-spring/three";
-import { Book, BookProps } from "./Book";
-import { Setup } from "../../.storybook/Setup";
-import { useHelper } from "@react-three/drei";
+import { Book, BookProps, Rotation } from "./Book";
+import { Setup, useLight } from "../../.storybook/Setup";
 import { OrbitControls } from "../OrbitControl";
 import { Flex, Box as FlexBox } from "@react-three/flex/dist/index.cjs";
 import { Shelf } from "./Shelf";
-import { myBooks, parseDimentions } from "./myBooks";
+import { myBooks } from "./myBooks";
 import { Wall } from "./Wall";
 import { Floor } from "./Floor";
 import { Plant } from "./Plant";
@@ -18,7 +17,7 @@ import { Book as EditBookProps } from "./getBooks";
 import { useFrame } from "@react-three/fiber";
 
 export default {
-  title: "Book",
+  title: "BookShelf/Book",
   component: Setup,
 };
 
@@ -53,11 +52,6 @@ export function BookSt(args: BookProps) {
 
 BookSt.args = book1;
 BookSt.storyName = "Book";
-function useLight() {
-  const ref = React.useRef();
-  useHelper(ref, THREE.PointLightHelper);
-  return ref;
-}
 
 function StoryControls({ autoRotate, children }) {
   const topLightRef = useLight();
@@ -103,7 +97,7 @@ function StoryControls({ autoRotate, children }) {
 const defaultStoryArgs = {
   coverRotation: 60,
   booksNumber: 31,
-  autoRotate: true,
+  autoRotate: false,
   showAxes: false,
 } as const;
 
@@ -163,7 +157,7 @@ export function RoomSt({
 
   const handleEdit = React.useCallback(
     (book: EditBookProps) => {
-      setEditBook({ ...book, ...parseDimentions(book.dimentions) });
+      setEditBook((prev) => ({ ...prev, ...book }));
     },
     [editBook]
   );
@@ -288,17 +282,15 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
 function BookEditMode(props) {
   const { position, ...rest } = props;
 
-  const coverRotation = THREE.Math.degToRad(85);
+  const coverRotation = Rotation.Cover;
   const [rotation, setRotation] = React.useState(coverRotation);
 
-  const animationProps = useSpring({
+  const positionProps = useSpring({
     to: {
       position: [0, 0, 80],
-      rotation: [0, coverRotation, 0],
     },
     from: {
       position: [position[0], position[1] + 10, position[2]],
-      rotation: [coverRotation, 0, 0],
     },
     reset: false,
   });
@@ -308,7 +300,7 @@ function BookEditMode(props) {
       rotation: [0, rotation, 0],
     },
     from: {
-      rotation: [0, rotation - coverRotation, 0],
+      rotation: [0, rotation - THREE.Math.degToRad(-180), 0],
     },
     reset: false,
   });
@@ -318,8 +310,8 @@ function BookEditMode(props) {
   };
 
   return (
-    <a.mesh {...animationProps} {...rotationProps}>
-      <Book {...rest} onPointerDown={handleMove} />
+    <a.mesh {...positionProps} {...rotationProps}>
+      <Book {...rest} rotation={[0, 0, 0]} onPointerDown={handleMove} />
     </a.mesh>
   );
 }

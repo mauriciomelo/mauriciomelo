@@ -6,8 +6,11 @@ export interface Book {
   author: string;
   pages: number;
   isbn: string;
-  dimentions: string;
+  width: number;
+  height: number;
+  depth: number;
   cover: string;
+  spine?: string;
   backCover: string;
 }
 
@@ -32,4 +35,13 @@ async function getBooks() {
   const booksWithId = books.filter(({ isbn }) => Boolean(isbn));
   console.log(booksWithId);
   return booksWithId;
+}
+
+export function parseDimentions(dimentions) {
+  const [width, depth, height] = dimentions
+    .replace(" cm", "")
+    .split("x")
+    .map((x) => Number(x))
+    .sort((a, b) => a - b);
+  return { width, depth, height };
 }
