@@ -2,8 +2,14 @@ import React from "react";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+
 import theme from "../src/theme";
 import "../styles/globals.css";
+
+const cache = createCache({ key: "css", prepend: true });
+cache.compat = true;
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -17,7 +23,7 @@ export default function MyApp(props) {
   }, []);
 
   return (
-    <React.Fragment>
+    <CacheProvider value={cache}>
       <Head>
         <title>deva</title>
         <meta
@@ -30,6 +36,6 @@ export default function MyApp(props) {
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
-    </React.Fragment>
+    </CacheProvider>
   );
 }
