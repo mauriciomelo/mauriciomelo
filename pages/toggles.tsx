@@ -5,11 +5,11 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  FormLabel,
   Switch,
   TextField,
   Typography,
 } from "@material-ui/core";
+import * as R from "ramda";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { createToggleService } from "../services/toggles";
@@ -45,6 +45,8 @@ export default function Toggles() {
     });
   };
 
+  const title = titleFromPath(path);
+
   React.useEffect(() => {
     if (!Array.isArray(router.query.path)) {
       setPath(router.query.path || "");
@@ -60,29 +62,56 @@ export default function Toggles() {
     }
   }, [service, path, sha]);
 
+  if (!service) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        <Auth onChange={handleTokenChange} />
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
-        marginX: "auto",
-        marginTop: 5,
-        width: 300,
+        display: "flex",
+        padding: 4,
+        paddingTop: 10,
+        margin: "auto",
+        maxWidth: 600,
+        flexDirection: "column",
+        height: "100%",
       }}
     >
-      {!service && <Auth onChange={handleTokenChange} />}
-      <Box marginY={2}>
-        <form>
-          <TextField
-            name="path"
-            value={path}
-            placeholder="owner/repo/file.json"
-            label="file path"
-            onChange={handlePathChange}
-          />
-        </form>
-      </Box>
-
       <FormControl component="fieldset">
-        <FormLabel component="legend">{path}</FormLabel>
+        <Typography
+          sx={{ textTransform: "capitalize" }}
+          variant="h4"
+          gutterBottom
+          component="legend"
+        >
+          {title}
+        </Typography>
+
+        <Box sx={{ mb: 5 }}>
+          <form>
+            <TextField
+              name="path"
+              value={path}
+              placeholder="owner/repo/file.json"
+              label="file path"
+              onChange={handlePathChange}
+              variant="standard"
+              fullWidth
+            />
+          </form>
+        </Box>
         <FormGroup>
           {Object.keys(toggles).map((key) => (
             <FormControlLabel
@@ -103,6 +132,11 @@ export default function Toggles() {
   );
 }
 
+function titleFromPath(path: string) {
+  const fileName = R.pipe(R.split("/"), R.last, R.replace(".json", ""))(path);
+  return fileName;
+}
+
 export function Auth(props) {
   const { control, handleSubmit } = useForm({ mode: "onChange" });
   const onSubmit = (data) => {
@@ -110,10 +144,14 @@ export function Auth(props) {
   };
 
   return (
-    <Box>
-      <Box marginBottom={4}>
-        <Typography variant="overline">Authenticate</Typography>
-      </Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="overline">Authenticate</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box marginY={2}>
@@ -126,6 +164,7 @@ export function Auth(props) {
                 placeholder="GitHub Token"
                 type="password"
                 inputProps={field}
+                variant="filled"
               />
             )}
           />
