@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import * as R from "ramda";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { createToggleService } from "../services/toggles";
@@ -89,16 +90,20 @@ export default function Toggles() {
         height: "100%",
       }}
     >
-      <FormControl component="fieldset">
-        <Typography
-          sx={{ textTransform: "capitalize" }}
-          variant="h4"
-          gutterBottom
-          component="legend"
-        >
-          {title}
-        </Typography>
+      <Head>
+        <title>{title}</title>
+      </Head>
 
+      <Typography
+        sx={{ textTransform: "capitalize" }}
+        variant="h3"
+        gutterBottom
+        component="h1"
+      >
+        {title}
+      </Typography>
+
+      <FormControl component="fieldset">
         <Box sx={{ mb: 5 }}>
           <form>
             <TextField
