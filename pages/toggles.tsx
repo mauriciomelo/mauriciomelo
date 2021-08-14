@@ -29,17 +29,18 @@ const Editor = dynamic(
 ) as React.FC<EditorProps>;
 
 export default function Toggles() {
-  const router = useRouter();
-  const [toggles, setToggles] = React.useState({});
-  const [schema, setSchema] = React.useState({});
-  const [doc, setDoc] = React.useState();
-  const [message, setMessage] = React.useState("");
   const [service, setService] = React.useState<
     ReturnType<typeof createToggleService>
   >();
+  const router = useRouter();
+  const [message, setMessage] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { path, schemaPath, docPath } = router.query;
+
+  const [toggles, setToggles] = useFile(service, { path });
+  const [schema] = useFile(service, { path: schemaPath });
+  const [doc] = useFile(service, { path: docPath, parseJson: false });
 
   const handleChange = async (changes) => {
     setToggles(changes);
@@ -82,32 +83,6 @@ export default function Toggles() {
   };
 
   const title = titleFromPath(path);
-
-  React.useEffect(() => {
-    if (service && path) {
-      service.getToggles({ path }).then(({ toggles }) => {
-        setToggles(toggles);
-      });
-    }
-  }, [service, path]);
-
-  React.useEffect(() => {
-    if (service && schemaPath) {
-      service.getToggles({ path: schemaPath }).then(({ toggles }) => {
-        setSchema(toggles);
-      });
-    }
-  }, [service, schemaPath]);
-
-  React.useEffect(() => {
-    if (service && docPath) {
-      service
-        .getToggles({ path: docPath, parseJson: false })
-        .then(({ toggles }) => {
-          setDoc(toggles);
-        });
-    }
-  }, [service, docPath]);
   const validate = ajv.compile(schema);
   const valid = validate(toggles);
 
@@ -288,4 +263,20 @@ export function Auth(props) {
       </form>
     </Box>
   );
+}
+
+function useFile(
+  service,
+  { path, parseJson }: { path: string | string[]; parseJson?: boolean }
+): [file: any, setFile: React.Dispatch<React.SetStateAction<{}>>] {
+  const [file, setFile] = React.useState({});
+
+  React.useEffect(() => {
+    if (service && path) {
+      service.getToggles({ path, parseJson }).then(({ toggles }) => {
+        setFile(toggles);
+      });
+    }
+  }, [service, path]);
+  return [file, setFile];
 }
