@@ -36,6 +36,7 @@
     "electron": "^10.1.5",
     "html2canvas": "^1.1.4",
     "immer": "^9.0.5",
+    "jsoneditor": "^9.5.3",
     "next": "9.5.5",
     "ramda": "^0.27.1",
     "react": "^17.0.2",

@@ -3,38 +3,56 @@ import {
   Box,
   Button,
   FormControl,
-  FormControlLabel,
-  FormGroup,
-  Switch,
+  InputAdornment,
+  OutlinedInput,
   TextField,
   Typography,
 } from "@material-ui/core";
 import * as R from "ramda";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import "jsoneditor/dist/jsoneditor.min.css";
+import dynamic from "next/dynamic";
+
 import { useForm, Controller } from "react-hook-form";
 import { createToggleService } from "../services/toggles";
+import { EditorProps } from "../components/Editor";
+
+const Editor = dynamic(
+  () => import("../components/Editor").then(({ Editor }) => Editor) as any,
+  {
+    ssr: false,
+  }
+) as React.FC<EditorProps>;
 
 export default function Toggles() {
   const router = useRouter();
   const [toggles, setToggles] = React.useState({});
-  const [sha, setSha] = React.useState("");
+  const [message, setMessage] = React.useState("");
   const [path, setPath] = React.useState("");
   const [service, setService] = React.useState<
     ReturnType<typeof createToggleService>
   >();
 
-  console.log("path", router.query.path);
-
-  const handleChange = async (event) => {
-    const updatedToggles = {
-      ...toggles,
-      [event.target.name]: event.target.checked,
-    };
-    setToggles(updatedToggles);
-    const conntet = await service.updateToggles(path, sha, updatedToggles);
-    setSha(conntet.sha);
+  const handleChange = async (changes) => {
+    setToggles(changes);
   };
+
+  const handleCommit = async (e) => {
+    e.preventDefault();
+    const current = await service.getToggles(path);
+    const next = { ...current.toggles, ...toggles };
+
+    await service.updateToggles({
+      path,
+      sha: current.sha,
+      toggles: next,
+      message,
+    });
+    setToggles(next);
+    setMessage("");
+  };
+
   const handleTokenChange = ({ ghToken }) => {
     setService(createToggleService(ghToken));
   };
@@ -56,12 +74,11 @@ export default function Toggles() {
 
   React.useEffect(() => {
     if (service && path) {
-      service.getToggles(path).then(({ toggles, sha }) => {
+      service.getToggles(path).then(({ toggles }) => {
         setToggles(toggles);
-        setSha(sha);
       });
     }
-  }, [service, path, sha]);
+  }, [service, path]);
 
   if (!service) {
     return (
@@ -117,21 +134,28 @@ export default function Toggles() {
             />
           </form>
         </Box>
-        <FormGroup>
-          {Object.keys(toggles).map((key) => (
-            <FormControlLabel
-              key={key}
-              control={
-                <Switch
-                  checked={toggles[key]}
-                  onChange={handleChange}
-                  name={key}
-                />
+
+        <Editor json={toggles} onChange={handleChange} />
+
+        <Box mt={4}>
+          <form onSubmit={handleCommit}>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              placeholder="commit message"
+              required
+              fullWidth
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              endAdornment={
+                <InputAdornment position="start">
+                  <Button variant="contained" type="submit">
+                    Commit changes
+                  </Button>
+                </InputAdornment>
               }
-              label={key}
             />
-          ))}
-        </FormGroup>
+          </form>
+        </Box>
       </FormControl>
     </Box>
   );

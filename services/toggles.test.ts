@@ -58,11 +58,10 @@ describe("toggles service", () => {
       const toggles = {
         enableSomething: false,
       };
-      await service.updateToggles(
-        "org/repo/config/toggles.json",
-        "sha",
-        toggles
-      );
+      const message = "update toggle";
+      const path = "org/repo/config/toggles.json";
+      const sha = "sha";
+      await service.updateToggles({ path, sha, toggles, message });
       expect(requestMock).toHaveBeenCalledWith(
         "PUT /repos/{owner}/{repo}/contents/{path}",
         {
@@ -70,7 +69,7 @@ describe("toggles service", () => {
           sha: "sha",
           repo: "repo",
           path: "config/toggles.json",
-          message: "chore: update toggle",
+          message,
           content: toBase64(toggles),
         }
       );
@@ -87,11 +86,13 @@ describe("toggles service", () => {
         },
       });
 
-      const result = await service.updateToggles(
-        "org/repo/config/toggles.json",
-        "sha",
-        toggles
-      );
+      const path = "org/repo/config/toggles.json";
+      const result = await service.updateToggles({
+        path,
+        sha,
+        toggles,
+        message: "message",
+      });
       expect(result.sha).toEqual(sha);
     });
   });

@@ -23,7 +23,7 @@ export function createToggleService(token: string) {
       return { toggles, sha: data.sha };
     },
 
-    async updateToggles(path, sha, toggles) {
+    async updateToggles({ path, sha, toggles, message }) {
       const octokit = new Octokit({
         auth: token,
       });
@@ -33,7 +33,7 @@ export function createToggleService(token: string) {
         "PUT /repos/{owner}/{repo}/contents/{path}",
         {
           ...parseFileUri(path),
-          message: "chore: update toggle",
+          message,
           sha,
           content,
         }
