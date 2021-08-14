@@ -1,1 +1,12 @@
-{"toggle1":false,"toggle2":false}
+{
+  "cart_button": false,
+  "user_profile": false,
+  "cancel_plan": {
+    "id": "someid",
+    "variants": [
+      { "name": "true", "value": true },
+      { "name": "false", "value": false }
+    ],
+    "value": { "true": 0.5, "false": 0.3 }
+  }
+}

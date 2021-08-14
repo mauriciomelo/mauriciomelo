@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "description": "toggles",
+  "propertyNames": {
+    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+    "description": "toggle name"
+  },
+  "patternProperties": {
+    "^.*$": {
+      "anyOf": [
+        { "type": "boolean" },
+        {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string", "description": "google experiment id" },
+            "variants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": {}
+                }
+              }
+            },
+            "value": {
+              "patternProperties": {
+                "^.*$": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
