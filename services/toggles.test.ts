@@ -75,6 +75,24 @@ describe("toggles service", () => {
       );
     });
 
+    it("formats JSON", async () => {
+      const toggles = {
+        toggle: false,
+      };
+      const expectedString = '{\n  "toggle": false\n}';
+
+      const message = "update toggle";
+      const path = "org/repo/config/toggles.json";
+      const sha = "sha";
+      await service.updateToggles({ path, sha, toggles, message });
+      expect(requestMock).toHaveBeenCalledWith(
+        "PUT /repos/{owner}/{repo}/contents/{path}",
+        expect.objectContaining({
+          content: Buffer.from(expectedString).toString("base64"),
+        })
+      );
+    });
+
     it("returns new file sha", async () => {
       const toggles = {
         enableSomething: false,

@@ -13,10 +13,12 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import "jsoneditor/dist/jsoneditor.min.css";
 import dynamic from "next/dynamic";
-
+import Ajv from "ajv";
 import { useForm, Controller } from "react-hook-form";
 import { createToggleService } from "../services/toggles";
 import { EditorProps } from "../components/Editor";
+
+const ajv = new Ajv();
 
 const Editor = dynamic(
   () => import("../components/Editor").then(({ Editor }) => Editor) as any,
@@ -28,11 +30,13 @@ const Editor = dynamic(
 export default function Toggles() {
   const router = useRouter();
   const [toggles, setToggles] = React.useState({});
+  const [schema, setSchema] = React.useState({});
   const [message, setMessage] = React.useState("");
-  const [path, setPath] = React.useState("");
   const [service, setService] = React.useState<
     ReturnType<typeof createToggleService>
   >();
+
+  const { path, schemaPath } = router.query;
 
   const handleChange = async (changes) => {
     setToggles(changes);
@@ -57,20 +61,16 @@ export default function Toggles() {
     setService(createToggleService(ghToken));
   };
   const handlePathChange = ({ target }) => {
+    console.log(target);
     router.push({
       query: {
-        path: encodeURI(target.value),
+        ...router.query,
+        [target.name]: encodeURI(target.value),
       },
     });
   };
 
   const title = titleFromPath(path);
-
-  React.useEffect(() => {
-    if (!Array.isArray(router.query.path)) {
-      setPath(router.query.path || "");
-    }
-  }, [router.query.path]);
 
   React.useEffect(() => {
     if (service && path) {
@@ -79,6 +79,17 @@ export default function Toggles() {
       });
     }
   }, [service, path]);
+
+  React.useEffect(() => {
+    if (service && schemaPath) {
+      service.getToggles(schemaPath).then(({ toggles }) => {
+        setSchema(toggles);
+      });
+    }
+  }, [service, schemaPath]);
+
+  const validate = ajv.compile(schema);
+  const valid = validate(toggles);
 
   if (!service) {
     return (
@@ -125,9 +136,18 @@ export default function Toggles() {
           <form>
             <TextField
               name="path"
-              value={path}
+              defaultValue={path}
               placeholder="owner/repo/file.json"
               label="file path"
+              onChange={handlePathChange}
+              variant="standard"
+              fullWidth
+            />
+            <TextField
+              name="schemaPath"
+              defaultValue={schemaPath}
+              placeholder="owner/repo/file.json"
+              label="schema path"
               onChange={handlePathChange}
               variant="standard"
               fullWidth
@@ -135,10 +155,10 @@ export default function Toggles() {
           </form>
         </Box>
 
-        <Editor json={toggles} onChange={handleChange} />
+        <Editor json={toggles} schema={schema} onChange={handleChange} />
 
         <Box mt={4}>
-          <form onSubmit={handleCommit}>
+          <form onSubmit={handleCommit} autoComplete="off">
             <OutlinedInput
               id="outlined-adornment-amount"
               placeholder="commit message"
@@ -148,7 +168,7 @@ export default function Toggles() {
               onChange={(e) => setMessage(e.target.value)}
               endAdornment={
                 <InputAdornment position="start">
-                  <Button variant="contained" type="submit">
+                  <Button variant="contained" type="submit" disabled={!valid}>
                     Commit changes
                   </Button>
                 </InputAdornment>
@@ -161,7 +181,11 @@ export default function Toggles() {
   );
 }
 
-function titleFromPath(path: string) {
+function titleFromPath(path: string[] | string = "") {
+  if (Array.isArray(path)) {
+    return;
+  }
+
   const fileName = R.pipe(R.split("/"), R.last, R.replace(".json", ""))(path);
   return fileName;
 }

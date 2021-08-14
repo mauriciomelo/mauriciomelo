@@ -24,7 +24,6 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
 
     const options = {
       mode: "form",
-      schema,
       onChangeJSON: onChange,
     };
     editorRef.current = new JSONEditor(containerRef.current, options);
@@ -33,9 +32,9 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
   React.useEffect(() => {
     if (editorRef.current) {
       editorRef.current.update(json);
-      editorRef.current.expandAll(json);
+      editorRef.current.setSchema(schema);
     }
-  }, [editorRef.current, json]);
+  }, [editorRef.current, json, schema]);
 
   return (
     <Box>

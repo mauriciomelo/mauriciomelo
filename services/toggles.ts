@@ -52,7 +52,7 @@ function fromBase64(data) {
 }
 
 export function toBase64(toggles: any) {
-  return Buffer.from(JSON.stringify(toggles)).toString("base64");
+  return Buffer.from(JSON.stringify(toggles, null, 2)).toString("base64");
 }
 
 function parseFileUri(uri: string) {
