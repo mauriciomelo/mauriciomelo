@@ -196,6 +196,7 @@ export default function Toggles() {
                 onBlur={handlePathChange}
                 variant="outlined"
                 fullWidth
+                sx={{ mb: 3 }}
               />
 
               <TextField
