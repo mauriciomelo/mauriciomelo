@@ -7,4 +7,6 @@ const debug = process.env.NODE_ENV !== "production";
 module.exports = {
   assetPrefix: !debug ? "/deva/" : "",
   basePath: !debug ? "/deva" : "",
+  // Prefer loading of ES Modules over CommonJS
+  experimental: { esmExternals: true },
 };

@@ -15,6 +15,7 @@ import "jsoneditor/dist/jsoneditor.min.css";
 import dynamic from "next/dynamic";
 import Ajv from "ajv";
 import { useForm, Controller } from "react-hook-form";
+import ReactMarkdown from "react-markdown";
 import { createToggleService } from "../services/toggles";
 import { EditorProps } from "../components/Editor";
 
@@ -31,13 +32,14 @@ export default function Toggles() {
   const router = useRouter();
   const [toggles, setToggles] = React.useState({});
   const [schema, setSchema] = React.useState({});
+  const [doc, setDoc] = React.useState();
   const [message, setMessage] = React.useState("");
   const [service, setService] = React.useState<
     ReturnType<typeof createToggleService>
   >();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { path, schemaPath } = router.query;
+  const { path, schemaPath, docPath } = router.query;
 
   const handleChange = async (changes) => {
     setToggles(changes);
@@ -53,7 +55,7 @@ export default function Toggles() {
 
   const handleCommit = async (e) => {
     e.preventDefault();
-    const current = await service.getToggles(path);
+    const current = await service.getToggles({ path });
     const next = { ...current.toggles, ...toggles };
 
     await service.updateToggles({
@@ -83,7 +85,7 @@ export default function Toggles() {
 
   React.useEffect(() => {
     if (service && path) {
-      service.getToggles(path).then(({ toggles }) => {
+      service.getToggles({ path }).then(({ toggles }) => {
         setToggles(toggles);
       });
     }
@@ -91,11 +93,21 @@ export default function Toggles() {
 
   React.useEffect(() => {
     if (service && schemaPath) {
-      service.getToggles(schemaPath).then(({ toggles }) => {
+      service.getToggles({ path: schemaPath }).then(({ toggles }) => {
         setSchema(toggles);
       });
     }
   }, [service, schemaPath]);
+
+  React.useEffect(() => {
+    if (service && docPath) {
+      service
+        .getToggles({ path: docPath, parseJson: false })
+        .then(({ toggles }) => {
+          setDoc(toggles);
+        });
+    }
+  }, [service, docPath]);
   const validate = ajv.compile(schema);
   const valid = validate(toggles);
 
@@ -129,7 +141,6 @@ export default function Toggles() {
       <Head>
         <title>{title}</title>
       </Head>
-
       <Typography
         sx={{ textTransform: "capitalize" }}
         variant="h3"
@@ -138,7 +149,6 @@ export default function Toggles() {
       >
         {title}
       </Typography>
-
       <Box
         sx={{
           py: 1,
@@ -187,13 +197,21 @@ export default function Toggles() {
                 variant="outlined"
                 fullWidth
               />
+
+              <TextField
+                name="docPath"
+                defaultValue={docPath}
+                placeholder="owner/repo/doc.md"
+                label="doc path"
+                onBlur={handlePathChange}
+                variant="outlined"
+                fullWidth
+              />
             </form>
           </Box>
         </Popover>
       </Box>
-
       <Editor json={toggles} schema={schema} onChange={handleChange} />
-
       <Box mt={4}>
         <form onSubmit={handleCommit} autoComplete="off">
           <OutlinedInput
@@ -212,6 +230,10 @@ export default function Toggles() {
             }
           />
         </form>
+      </Box>
+
+      <Box sx={{ py: 10 }}>
+        <ReactMarkdown children={doc} />
       </Box>
     </Box>
   );

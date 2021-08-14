@@ -22,7 +22,9 @@ describe("toggles service", () => {
   });
   describe("getToggles", () => {
     it("calls github with corrent path", async () => {
-      await service.getToggles("mauriciomelo/deva/config/toggles.json");
+      await service.getToggles({
+        path: "mauriciomelo/deva/config/toggles.json",
+      });
       expect(requestMock).toHaveBeenCalledWith(
         "GET /repos/{owner}/{repo}/contents/{path}",
         {
@@ -44,11 +46,33 @@ describe("toggles service", () => {
         },
       });
 
-      const file = await service.getToggles(
-        "mauriciomelo/deva/config/toggles.json"
-      );
+      const file = await service.getToggles({
+        path: "mauriciomelo/deva/config/toggles.json",
+      });
       expect(file).toEqual({
         toggles,
+      });
+    });
+
+    it("does not parse the file if parseJson is false", async () => {
+      const data = `
+      # Doc
+      
+      some plain text markdown
+      `;
+
+      requestMock.mockResolvedValue({
+        data: {
+          content: Buffer.from(data).toString("base64"),
+        },
+      });
+
+      const file = await service.getToggles({
+        path: "mauriciomelo/deva/config/toggles.json",
+        parseJson: false,
+      });
+      expect(file).toEqual({
+        toggles: data,
       });
     });
   });

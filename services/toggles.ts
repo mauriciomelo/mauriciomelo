@@ -6,7 +6,7 @@ export function createToggleService(token: string) {
   });
 
   return {
-    async getToggles(path) {
+    async getToggles({ path, parseJson = true }) {
       const { data } = await octokit.request(
         "GET /repos/{owner}/{repo}/contents/{path}",
         parseFileUri(path)
@@ -17,8 +17,8 @@ export function createToggleService(token: string) {
       }
 
       const buff = fromBase64(data.content);
-      const packageJSON = buff.toString("ascii");
-      const toggles = JSON.parse(packageJSON);
+      const content = buff.toString("ascii");
+      const toggles = parseJson ? JSON.parse(content) : content;
 
       return { toggles, sha: data.sha };
     },
