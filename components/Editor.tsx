@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  OutlinedInput,
-  InputAdornment,
-} from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import JSONEditor from "jsoneditor";
 
 export type EditorProps = {
@@ -37,7 +31,33 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
   }, [editorRef.current, json, schema]);
 
   return (
-    <Box>
+    <Box
+      sx={{
+        p: 2,
+        backgroundColor: "#0f0f0f",
+        borderRadius: 1,
+        ".jsoneditor-search .jsoneditor-frame": {
+          backgroundColor: "#ffffff1a",
+          color: "white",
+          p: "3px",
+          borderRadius: 1,
+        },
+        ".jsoneditor, .jsoneditor-tree, .jsoneditor-menu, .jsoneditor-navigation-bar, .jsoneditor-frame, .jsoneditor-frame input": {
+          backgroundColor: "transparent",
+          border: "none",
+          color: "white",
+        },
+        ".jsoneditor-treepath, .jsoneditor-value": {
+          color: "#444444",
+        },
+        ".jsoneditor-field": {
+          color: "secondary.main",
+        },
+        ".jsoneditor-highlight": {
+          color: "black",
+        },
+      }}
+    >
       <div ref={containerRef}></div>
     </Box>
   );

@@ -2,9 +2,9 @@ import React from "react";
 import {
   Box,
   Button,
-  FormControl,
   InputAdornment,
   OutlinedInput,
+  Popover,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -35,11 +35,20 @@ export default function Toggles() {
   const [service, setService] = React.useState<
     ReturnType<typeof createToggleService>
   >();
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { path, schemaPath } = router.query;
 
   const handleChange = async (changes) => {
     setToggles(changes);
+  };
+
+  const handleConfigure = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleConfigureClose = () => {
+    setAnchorEl(null);
   };
 
   const handleCommit = async (e) => {
@@ -87,7 +96,6 @@ export default function Toggles() {
       });
     }
   }, [service, schemaPath]);
-
   const validate = ajv.compile(schema);
   const valid = validate(toggles);
 
@@ -131,52 +139,80 @@ export default function Toggles() {
         {title}
       </Typography>
 
-      <FormControl component="fieldset">
-        <Box sx={{ mb: 5 }}>
-          <form>
-            <TextField
-              name="path"
-              defaultValue={path}
-              placeholder="owner/repo/file.json"
-              label="file path"
-              onChange={handlePathChange}
-              variant="standard"
-              fullWidth
-            />
-            <TextField
-              name="schemaPath"
-              defaultValue={schemaPath}
-              placeholder="owner/repo/file.json"
-              label="schema path"
-              onChange={handlePathChange}
-              variant="standard"
-              fullWidth
-            />
-          </form>
-        </Box>
+      <Box
+        sx={{
+          py: 1,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h2" variant="subtitle2" color="gray">
+          {path}
+        </Typography>
+        <Button color="secondary" onClick={handleConfigure}>
+          Configure
+        </Button>
+        <Popover
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={handleConfigureClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Box sx={{ p: 4, width: 500 }}>
+            <form>
+              <TextField
+                name="path"
+                defaultValue={path}
+                placeholder="owner/repo/file.json"
+                label="file path"
+                onBlur={handlePathChange}
+                variant="outlined"
+                fullWidth
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                name="schemaPath"
+                defaultValue={schemaPath}
+                placeholder="owner/repo/file.json"
+                label="schema path"
+                onBlur={handlePathChange}
+                variant="outlined"
+                fullWidth
+              />
+            </form>
+          </Box>
+        </Popover>
+      </Box>
 
-        <Editor json={toggles} schema={schema} onChange={handleChange} />
+      <Editor json={toggles} schema={schema} onChange={handleChange} />
 
-        <Box mt={4}>
-          <form onSubmit={handleCommit} autoComplete="off">
-            <OutlinedInput
-              id="outlined-adornment-amount"
-              placeholder="commit message"
-              required
-              fullWidth
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              endAdornment={
-                <InputAdornment position="start">
-                  <Button variant="contained" type="submit" disabled={!valid}>
-                    Commit changes
-                  </Button>
-                </InputAdornment>
-              }
-            />
-          </form>
-        </Box>
-      </FormControl>
+      <Box mt={4}>
+        <form onSubmit={handleCommit} autoComplete="off">
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            placeholder="commit message"
+            required
+            fullWidth
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            endAdornment={
+              <InputAdornment position="start">
+                <Button variant="contained" type="submit" disabled={!valid}>
+                  Commit changes
+                </Button>
+              </InputAdornment>
+            }
+          />
+        </form>
+      </Box>
     </Box>
   );
 }
