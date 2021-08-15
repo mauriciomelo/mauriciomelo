@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@material-ui/core";
 import JSONEditor from "jsoneditor";
+import "jsoneditor/dist/jsoneditor.min.css";
 
 export type EditorProps = {
   json?: unknown;

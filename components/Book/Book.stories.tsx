@@ -5,7 +5,7 @@ import { useSpring, a } from "@react-spring/three";
 import { Book, BookProps, Rotation } from "./Book";
 import { Setup, useLight } from "../../.storybook/Setup";
 import { OrbitControls } from "../OrbitControl";
-import { Flex, Box as FlexBox } from "@react-three/flex/dist/index.cjs";
+import { Flex, Box as FlexBox } from "@react-three/flex";
 import { Shelf } from "./Shelf";
 import { myBooks } from "./myBooks";
 import { Wall } from "./Wall";

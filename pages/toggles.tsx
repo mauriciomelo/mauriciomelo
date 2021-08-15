@@ -1,28 +1,22 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  InputAdornment,
-  OutlinedInput,
-  Popover,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Box, Button, Popover, Typography } from "@material-ui/core";
 import * as R from "ramda";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import "jsoneditor/dist/jsoneditor.min.css";
 import dynamic from "next/dynamic";
 import Ajv from "ajv";
-import { useForm, Controller } from "react-hook-form";
 import ReactMarkdown from "react-markdown";
 import { createToggleService } from "../services/toggles";
-import { EditorProps } from "../components/Editor";
+import { EditorProps } from "../components/Toggles/Editor";
+import { Auth } from "../components/Toggles/Auth";
+import { Commit } from "../components/Toggles/Commit";
+import { Configuration } from "../components/Toggles/Configuration";
 
 const ajv = new Ajv();
 
 const Editor = dynamic(
-  () => import("../components/Editor").then(({ Editor }) => Editor) as any,
+  () =>
+    import("../components/Toggles/Editor").then(({ Editor }) => Editor) as any,
   {
     ssr: false,
   }
@@ -152,60 +146,23 @@ export default function Toggles() {
           }}
         >
           <Box sx={{ p: 4, width: 500 }}>
-            <form>
-              <TextField
-                name="path"
-                defaultValue={path}
-                placeholder="owner/repo/file.json"
-                label="file path"
-                onBlur={handlePathChange}
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 3 }}
-              />
-              <TextField
-                name="schemaPath"
-                defaultValue={schemaPath}
-                placeholder="owner/repo/file.json"
-                label="schema path"
-                onBlur={handlePathChange}
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 3 }}
-              />
-
-              <TextField
-                name="docPath"
-                defaultValue={docPath}
-                placeholder="owner/repo/doc.md"
-                label="doc path"
-                onBlur={handlePathChange}
-                variant="outlined"
-                fullWidth
-              />
-            </form>
+            <Configuration
+              path={path}
+              schemaPath={schemaPath}
+              docPath={docPath}
+              handlePathChange={handlePathChange}
+            />
           </Box>
         </Popover>
       </Box>
       <Editor json={toggles} schema={schema} onChange={handleChange} />
       <Box mt={4}>
-        <form onSubmit={handleCommit} autoComplete="off">
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            placeholder="commit message"
-            required
-            fullWidth
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            endAdornment={
-              <InputAdornment position="start">
-                <Button variant="contained" type="submit" disabled={!valid}>
-                  Commit changes
-                </Button>
-              </InputAdornment>
-            }
-          />
-        </form>
+        <Commit
+          message={message}
+          setMessage={setMessage}
+          handleCommit={handleCommit}
+          valid={valid}
+        />
       </Box>
 
       <Box sx={{ py: 10 }}>
@@ -222,47 +179,6 @@ function titleFromPath(path: string[] | string = "") {
 
   const fileName = R.pipe(R.split("/"), R.last, R.replace(".json", ""))(path);
   return fileName;
-}
-
-export function Auth(props) {
-  const { control, handleSubmit } = useForm({ mode: "onChange" });
-  const onSubmit = (data) => {
-    props.onChange(data);
-  };
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Typography variant="overline">Authenticate</Typography>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box marginY={2}>
-          <Controller
-            name="ghToken"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                placeholder="GitHub Token"
-                type="password"
-                inputProps={field}
-                variant="filled"
-              />
-            )}
-          />
-        </Box>
-
-        <Box marginY={2}>
-          <Button type="submit">submit</Button>
-        </Box>
-      </form>
-    </Box>
-  );
 }
 
 function useFile(

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as THREE from "three";
-import { Flex, Box } from "@react-three/flex/dist/index.cjs";
+import { Flex, Box } from "@react-three/flex";
 import { useTexture } from "@react-three/drei";
 import { publicUrl } from "../../src/publicUrl";
 import { quadrantAngle } from "./quadrantAngle";
