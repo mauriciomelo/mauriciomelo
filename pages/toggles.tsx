@@ -11,6 +11,7 @@ import { EditorProps } from "../components/Toggles/Editor";
 import { Auth } from "../components/Toggles/Auth";
 import { Commit } from "../components/Toggles/Commit";
 import { Configuration } from "../components/Toggles/Configuration";
+import { buildMessage } from "../services/jsonDiffMessage";
 
 const ajv = new Ajv();
 
@@ -32,9 +33,18 @@ export default function Toggles() {
 
   const { path, schemaPath, docPath } = router.query;
 
-  const [toggles, setToggles] = useFile(service, { path });
+  const [remoteToggles, setRemoteToggles] = useFile(service, { path });
+  const [toggles, setToggles] = React.useState(remoteToggles);
   const [schema] = useFile(service, { path: schemaPath });
   const [doc] = useFile(service, { path: docPath, parseJson: false });
+
+  React.useEffect(() => {
+    setToggles(remoteToggles);
+  }, [remoteToggles]);
+
+  React.useEffect(() => {
+    setMessage(buildMessage(remoteToggles, toggles));
+  }, [toggles]);
 
   const handleChange = async (changes) => {
     setToggles(changes);
@@ -59,7 +69,7 @@ export default function Toggles() {
       toggles: next,
       message,
     });
-    setToggles(next);
+    setRemoteToggles(next);
     setMessage("");
   };
 

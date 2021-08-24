@@ -8,6 +8,7 @@ export function Commit(props) {
         id="outlined-adornment-amount"
         placeholder="commit message"
         required
+        inputProps={{ maxLength: 50 }}
         fullWidth
         value={props.message}
         onChange={(e) => props.setMessage?.(e.target.value)}
