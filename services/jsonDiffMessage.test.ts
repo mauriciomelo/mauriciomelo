@@ -1,15 +1,41 @@
 import { buildMessage } from "./jsonDiffMessage";
 
+describe("booleans", () => {
+  it("writes disable if false", () => {
+    const original = {
+      someFlag: true,
+    };
+
+    const updated = {
+      someFlag: false,
+    };
+
+    expect(buildMessage(original, updated)).toEqual("disable someFlag");
+  });
+
+  it("writes enable if true", () => {
+    const original = {
+      someFlag: false,
+    };
+
+    const updated = {
+      someFlag: true,
+    };
+
+    expect(buildMessage(original, updated)).toEqual("enable someFlag");
+  });
+});
+
 it("build message based on the diff", () => {
   const original = {
-    toggle: true,
+    toggle: "old",
   };
 
   const updated = {
-    toggle: false,
+    toggle: "new",
   };
 
-  expect(buildMessage(original, updated)).toEqual("set toggle to false");
+  expect(buildMessage(original, updated)).toEqual("set toggle to new");
 });
 
 it("handles deep keys", () => {
@@ -21,11 +47,11 @@ it("handles deep keys", () => {
 
   const updated = {
     toggle: {
-      value: false,
+      value: "anna",
     },
   };
 
-  expect(buildMessage(original, updated)).toEqual("set toggle.value to false");
+  expect(buildMessage(original, updated)).toEqual("set toggle.value to anna");
 });
 
 it("handles multiple keys", () => {
