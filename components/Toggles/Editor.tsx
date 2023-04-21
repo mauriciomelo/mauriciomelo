@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import JSONEditor from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.min.css";
 
@@ -43,11 +43,12 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
           p: "3px",
           borderRadius: 1,
         },
-        ".jsoneditor, .jsoneditor-tree, .jsoneditor-menu, .jsoneditor-navigation-bar, .jsoneditor-frame, .jsoneditor-frame input": {
-          backgroundColor: "transparent",
-          border: "none",
-          color: "white",
-        },
+        ".jsoneditor, .jsoneditor-tree, .jsoneditor-menu, .jsoneditor-navigation-bar, .jsoneditor-frame, .jsoneditor-frame input":
+          {
+            backgroundColor: "transparent",
+            border: "none",
+            color: "white",
+          },
         ".jsoneditor-treepath, .jsoneditor-value": {
           color: "#444444",
         },

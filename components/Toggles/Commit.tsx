@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, InputAdornment, OutlinedInput } from "@material-ui/core";
+import { Button, InputAdornment, OutlinedInput } from "@mui/material";
 
 export function Commit(props) {
   return (

@@ -12,7 +12,7 @@ import { Wall } from "./Wall";
 import { Floor } from "./Floor";
 import { Plant } from "./Plant";
 import { EditBook } from "./EditBook";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { Book as EditBookProps } from "./getBooks";
 import { useFrame } from "@react-three/fiber";
 
@@ -151,9 +151,8 @@ export function RoomSt({
   ...rest
 }: typeof defaultStoryArgs) {
   const [books, setBooks] = React.useState(buildBooks(booksNumber));
-  const [editBook, setEditBook] = React.useState<
-    (EditBookProps & { position?: number[] }) | null
-  >(null);
+  const [editBook, setEditBook] =
+    React.useState<(EditBookProps & { position?: number[] }) | null>(null);
 
   const handleEdit = React.useCallback(
     (book: EditBookProps) => {
@@ -300,7 +299,7 @@ function BookEditMode(props) {
       rotation: [0, rotation, 0],
     },
     from: {
-      rotation: [0, rotation - THREE.Math.degToRad(-180), 0],
+      rotation: [0, rotation - THREE.MathUtils.degToRad(-180), 0],
     },
     reset: false,
   });

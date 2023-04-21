@@ -53,7 +53,16 @@ export function Book(props: BookProps) {
     attachArray: "material",
   };
 
-  const material = leather ? leatherMaterial : paperMaterial;
+  const baseMaterial = leather ? leatherMaterial : paperMaterial;
+
+  const materials = [
+    { map: backCoverTexture, ...baseMaterial },
+    { map: frontCoverTexture, ...baseMaterial },
+    { color: "white" },
+    { color: "white" },
+    { color: "white" },
+    { map: spineTexture, ...baseMaterial },
+  ];
 
   return (
     <mesh
@@ -64,12 +73,14 @@ export function Book(props: BookProps) {
       receiveShadow
     >
       <boxGeometry name="book" args={[width, height, depth]} />
-      <meshStandardMaterial map={backCoverTexture} {...material} />
-      <meshStandardMaterial map={frontCoverTexture} {...material} />
-      <meshStandardMaterial attachArray="material" color="white" />
-      <meshStandardMaterial attachArray="material" color="white" />
-      <meshStandardMaterial attachArray="material" color="white" />
-      <meshStandardMaterial map={spineTexture} {...material} />
+
+      {materials.map((material, index) => (
+        <meshStandardMaterial
+          {...material}
+          key={index}
+          attach={`material-${index}`}
+        />
+      ))}
     </mesh>
   );
 }

@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { OrbitControls } from "../components/OrbitControl";
 import { useHelper } from "@react-three/drei";
 
-const { degToRad } = THREE.Math;
+const { degToRad } = THREE.MathUtils;
 export function Setup({
   children,
   cameraFov = 90,

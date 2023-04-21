@@ -5,7 +5,7 @@ import { useTexture } from "@react-three/drei";
 import { publicUrl } from "../../src/publicUrl";
 import { quadrantAngle } from "./quadrantAngle";
 
-const { degToRad } = THREE.Math;
+const { degToRad } = THREE.MathUtils;
 function Surface({ width, height, depth }) {
   const texture = useTexture(
     publicUrl("/textures/wood/Wood_Plywood_Front_001_basecolor.jpg")

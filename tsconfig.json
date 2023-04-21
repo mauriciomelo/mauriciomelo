@@ -16,13 +16,15 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, ".storybook/Editor.tsx"  ],
+    "**/*.tsx",
+    ".storybook/Editor.tsx"
+  ],
   "exclude": [
     "node_modules"
   ]

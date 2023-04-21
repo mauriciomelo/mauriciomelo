@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Popover, Typography } from "@material-ui/core";
+import { Box, Button, Popover, Typography } from "@mui/material";
 import * as R from "ramda";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -24,9 +24,8 @@ const Editor = dynamic(
 ) as React.FC<EditorProps>;
 
 export default function Toggles() {
-  const [service, setService] = React.useState<
-    ReturnType<typeof createToggleService>
-  >();
+  const [service, setService] =
+    React.useState<ReturnType<typeof createToggleService>>();
   const router = useRouter();
   const [message, setMessage] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);

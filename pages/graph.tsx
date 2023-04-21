@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, TextareaAutosize } from "@material-ui/core";
+import { Grid, TextareaAutosize } from "@mui/material";
 import { parseSpec } from "../services/specNetwork";
 import { adaptSpecs } from "../services/specToGraphLinkAdapter";
 import { ForceGraph } from "../components/ForceGraph";
@@ -18,9 +18,10 @@ export default function SpecGraph() {
     setSpec(spec);
   }, []);
 
-  const forceGraphData = React.useMemo(() => adaptSpecs(parseSpec(spec)), [
-    spec,
-  ]);
+  const forceGraphData = React.useMemo(
+    () => adaptSpecs(parseSpec(spec)),
+    [spec]
+  );
 
   return (
     <Grid container spacing={2} direction="row">

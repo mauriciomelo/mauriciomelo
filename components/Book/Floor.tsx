@@ -2,7 +2,7 @@ import * as React from "react";
 import * as THREE from "three";
 import { Plane, useTexture } from "@react-three/drei";
 import { publicUrl } from "../../src/publicUrl";
-const { degToRad } = THREE.Math;
+const { degToRad } = THREE.MathUtils;
 
 export function Floor() {
   const texture = useTexture(
