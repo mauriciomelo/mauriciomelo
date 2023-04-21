@@ -152,7 +152,7 @@ export function RoomSt({
 }: typeof defaultStoryArgs) {
   const [books, setBooks] = React.useState(buildBooks(booksNumber));
   const [editBook, setEditBook] =
-    React.useState<(EditBookProps & { position?: number[] }) | null>(null);
+    React.useState<(EditBookProps & BookEditMode) | null>(null);
 
   const handleEdit = React.useCallback(
     (book: EditBookProps) => {
@@ -231,8 +231,12 @@ RoomSt.defaultProps = RoomSt.args;
 RoomSt.argTypes = defaultStoryArgTypes;
 RoomSt.storyName = "Room";
 
+type BookEditMode = {
+  position: THREE.Vector3Tuple;
+};
+
 interface RoomProps {
-  editBook: EditBookProps;
+  editBook: EditBookProps & BookEditMode;
   books: EditBookProps[];
   onSelect: (book: EditBookProps, e: any) => void;
   coverRotation: number;
@@ -278,7 +282,7 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
   );
 }
 
-function BookEditMode(props) {
+function BookEditMode(props: BookEditMode) {
   const { position, ...rest } = props;
 
   const coverRotation = Rotation.Cover;
@@ -292,9 +296,9 @@ function BookEditMode(props) {
       position: [position[0], position[1] + 10, position[2]],
     },
     reset: false,
-  });
+  } as const);
 
-  const rotationProps = useSpring({
+  const rotationProps = useSpring<React.ComponentProps<typeof a.mesh>>({
     to: {
       rotation: [0, rotation, 0],
     },

@@ -21,7 +21,7 @@
     "@mui/material": "^5.12.1",
     "@octokit/core": "^3.5.1",
     "@react-hook/debounce": "^4.0.0",
-    "@react-spring/three": "^9.2.3",
+    "@react-spring/three": "^9.7.2",
     "@react-three/drei": "^9.65.5",
     "@react-three/fiber": "^8.12.2",
     "@react-three/flex": "^1.0.1",

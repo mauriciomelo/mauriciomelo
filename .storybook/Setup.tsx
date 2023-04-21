@@ -9,20 +9,19 @@ const { degToRad } = THREE.MathUtils;
 export function Setup({
   children,
   cameraFov = 90,
-  cameraPosition = new THREE.Vector3(0, 20, 150),
+  cameraPosition = [0, 20, 150],
   lights = true,
   axesHelper = true,
   orbitControls = true,
 }) {
   const virtualCamera = React.useRef<THREE.Camera>();
-  // const keyLightRef = useLight();
 
   return (
     <Box bgcolor="black" height="100%">
       <Canvas
         shadows
         camera={{
-          position: cameraPosition,
+          position: new THREE.Vector3(...cameraPosition),
           fov: cameraFov,
         }}
       >

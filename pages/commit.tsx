@@ -1,8 +1,6 @@
 import React from "react";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Autocomplete, TextField, Box } from "@mui/material";
 import { curry } from "ramda";
-import { Box } from "@mui/material";
 
 const commitArgs = [
   "scope",
@@ -23,8 +21,8 @@ const exec = curry((path, cmd) => {
     return out.toString();
   } catch (e) {
     console.error(e);
-    return e.toString();
     process.exitCode = e.status;
+    return e.toString();
   }
 });
 
