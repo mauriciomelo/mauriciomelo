@@ -11,7 +11,7 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
 
   React.useEffect(() => {
     props?.onChange?.({ ...props.book, cover, spine, backCover: cover });
-  }, [cover, spine]);
+  }, [cover, props, spine]);
 
   const [title, subtitle] = props.book.title.split(": ");
   const bgcolor = "black";
@@ -79,6 +79,8 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
   );
 });
 
+CoverMaker.displayName = "CoverMaker";
+
 export type CoverProps = Pick<
   BooksProps,
   "isbn" | "cover" | "backCover" | "spine"
@@ -93,20 +95,22 @@ interface CoverMakerProps {
   book: CoverMakerBookProps;
   onChange?: (book: CoverProps) => void;
 }
-function useImageUrl(
-  dependencies = []
-): [string, React.MutableRefObject<unknown>] {
+function useImageUrl(dependencies: unknown[] = []) {
   const ref = React.useRef();
 
   const [imageUrl, setImageUrl] = React.useState<string | undefined>();
 
   const update = useDebounceCallback(() => {
-    html2canvas(ref.current).then((canvas) => setImageUrl(canvas.toDataURL()));
+    if (ref.current) {
+      html2canvas(ref.current).then((canvas) =>
+        setImageUrl(canvas.toDataURL())
+      );
+    }
   }, 1000);
 
   React.useEffect(() => {
     setTimeout(update, 300);
-  }, []);
+  }, [update]);
 
   React.useEffect(() => {
     if (ref.current) {
@@ -114,5 +118,5 @@ function useImageUrl(
     }
   }, dependencies);
 
-  return [imageUrl, ref];
+  return [imageUrl, ref] as const;
 }

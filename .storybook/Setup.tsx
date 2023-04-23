@@ -17,7 +17,7 @@ export function Setup({
   const virtualCamera = React.useRef<THREE.Camera>();
 
   return (
-    <Box bgcolor="black" height="100%">
+    <Box sx={{ bgcolor: "black", height: "100%" }}>
       <Canvas
         shadows
         camera={{
@@ -48,7 +48,7 @@ function Lights() {
 }
 
 export function useLight() {
-  const ref = React.useRef();
-  useHelper(ref, THREE.PointLightHelper);
+  const ref = React.useRef<THREE.PointLight>(null);
+  useHelper(ref as any, THREE.PointLightHelper);
   return ref;
 }

@@ -175,7 +175,7 @@ export default function Toggles() {
       </Box>
 
       <Box sx={{ py: 10 }}>
-        <ReactMarkdown children={doc} />
+        <ReactMarkdown>{doc}</ReactMarkdown>
       </Box>
     </Box>
   );
