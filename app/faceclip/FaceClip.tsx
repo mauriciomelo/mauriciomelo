@@ -16,10 +16,9 @@ const detectorPromise = faceDetection.createDetector(model, {
   runtime: "mediapipe",
   solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_detection",
   maxFaces: 20,
-  modelType: "full",
 });
 
-const photoList = ["/confidence.png", "/mona_lisa.jpg"];
+const photoList = ["/woman.png", "/boy.png"];
 export function FaceClip() {
   const imageRef = React.useRef<HTMLImageElement>();
   const [imagePath, setImagePath] = React.useState(photoList[0]);
