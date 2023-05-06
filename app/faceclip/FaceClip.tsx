@@ -12,15 +12,12 @@ const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
 
 const estimationConfig = { flipHorizontal: false } as const;
 
-const detectorPromise = faceDetection.createDetector(model, {
-  runtime: "mediapipe",
-  solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_detection",
-  maxFaces: 20,
-});
-
 const photoList = ["/woman.png", "/boy.png"];
 export function FaceClip() {
   const imageRef = React.useRef<HTMLImageElement>();
+  const detectorPromiseRef =
+    React.useRef<Promise<faceDetection.FaceDetector>>();
+  const imageContainerRef = React.useRef<HTMLImageElement>();
   const [imagePath, setImagePath] = React.useState(photoList[0]);
 
   const [faces, setFaces] = React.useState<faceDetection.Face[]>([]);
@@ -28,40 +25,24 @@ export function FaceClip() {
   React.useEffect(() => {
     (async () => {
       try {
-        const img = await createImageNodeFromURL(imagePath);
-        const detector = await detectorPromise;
+        detectorPromiseRef.current =
+          detectorPromiseRef.current || createDetector();
+
+        const [img, detector] = await Promise.all([
+          createImageNodeFromURL(imagePath),
+          detectorPromiseRef.current,
+        ]);
+
+        imageRef.current = img;
         const faces = await detector.estimateFaces(img, estimationConfig);
         setFaces(faces);
-        console.log({ faces, imageRef });
       } catch (error) {
         setFaces([]);
-        console.log(error);
       }
     })();
   }, [imagePath]);
 
   const hasFaces = Boolean(faces.length);
-
-  const boundingBoxStyle = React.useCallback(
-    (face: faceDetection.Face) => {
-      if (!hasFaces) {
-        return {};
-      }
-
-      const scaleFace = true;
-
-      const faceWidth = face.box.width * (scaleFace ? 2 : 1);
-      const faceHeight = face.box.height * (scaleFace ? 2 : 1);
-
-      return {
-        width: faceWidth,
-        height: faceHeight,
-        left: face.box.xMin - (scaleFace ? faceWidth / 4 : 0),
-        top: face.box.yMin - (scaleFace ? faceHeight / 3 : 0),
-      };
-    },
-    [hasFaces]
-  );
 
   React.useEffect(() => {
     faces.forEach((face, index) => {
@@ -76,14 +57,13 @@ export function FaceClip() {
       svg.attr("width", 150);
       svg.attr("height", 150);
 
-      image.attr(
-        "width",
-        `${scale(imageRef.current.getBoundingClientRect().width)}px`
-      );
+      const imageNaturalWidth = imageRef.current.naturalWidth;
+
+      image.attr("width", `${scale(imageNaturalWidth)}px`);
       image.attr("y", scale(-boundingBoxStyle(face).top));
       image.attr("x", scale(-boundingBoxStyle(face).left));
     });
-  }, [faces, boundingBoxStyle]);
+  }, [faces]);
 
   return (
     <div>
@@ -135,20 +115,37 @@ export function FaceClip() {
         ))}
       </div>
 
-      <div className="relative">
+      <div className="relative my-8">
         {hasFaces &&
           faces.map((face, i) => (
             <div
               key={i}
               className="absolute border-2 border-solid border-white"
-              style={boundingBoxStyle(face)}
+              style={boundingBoxStyle(
+                face,
+                d3
+                  .scaleLinear()
+                  .range([
+                    0,
+                    imageContainerRef.current.getBoundingClientRect().width,
+                  ])
+                  .domain([0, imageRef.current.naturalWidth])
+              )}
             />
           ))}
 
-        <img ref={imageRef} src={imagePath} />
+        <img ref={imageContainerRef} src={imagePath} />
       </div>
     </div>
   );
+}
+
+function createDetector(): Promise<faceDetection.FaceDetector> {
+  return faceDetection.createDetector(model, {
+    runtime: "mediapipe",
+    solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_detection",
+    maxFaces: 20,
+  });
 }
 
 function createImageNodeFromURL(url: string) {
@@ -157,4 +154,18 @@ function createImageNodeFromURL(url: string) {
     img.src = url;
     img.onload = () => resolve(img);
   });
+}
+
+function boundingBoxStyle(face: faceDetection.Face, scale = (x: number) => x) {
+  const scaleFace = true;
+
+  const faceWidth = face.box.width * (scaleFace ? 2 : 1);
+  const faceHeight = face.box.height * (scaleFace ? 2 : 1);
+
+  return {
+    width: scale(faceWidth),
+    height: scale(faceHeight),
+    left: scale(face.box.xMin - (scaleFace ? faceWidth / 4 : 0)),
+    top: scale(face.box.yMin - (scaleFace ? faceHeight / 3 : 0)),
+  };
 }
