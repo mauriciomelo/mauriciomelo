@@ -4,7 +4,8 @@ import "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 import "@tensorflow/tfjs-backend-webgpu";
 import * as faceDetection from "@tensorflow-models/face-detection";
-
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 import * as d3 from "d3";
 import React from "react";
 
@@ -69,19 +70,7 @@ export function FaceClip() {
     <div>
       <h1>Face Clip</h1>
 
-      <select
-        className="text-black"
-        onChange={(e) => setImagePath(e.target.value)}
-        value={imagePath}
-      >
-        {photoList.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-
-      <div className="flex">
+      <div className="mt-8 flex flex-wrap p-3">
         {faces.map((face, index) => (
           <svg
             key={index}
@@ -115,27 +104,41 @@ export function FaceClip() {
         ))}
       </div>
 
-      <div className="relative my-8">
-        {hasFaces &&
-          faces.map((face, i) => (
-            <div
-              key={i}
-              className="absolute border-2 border-solid border-white"
-              style={boundingBoxStyle(
-                face,
-                d3
-                  .scaleLinear()
-                  .range([
-                    0,
-                    imageContainerRef.current.getBoundingClientRect().width,
-                  ])
-                  .domain([0, imageRef.current.naturalWidth])
-              )}
-            />
-          ))}
+      <ImageGallery
+        items={photoList.map((src) => ({
+          original: src,
+          thumbnail: src,
+        }))}
+        onSlide={(index) => setImagePath(photoList[index])}
+        showFullscreenButton={false}
+        thumbnailPosition="top"
+        renderItem={(item) => {
+          return (
+            <div className="relative">
+              {hasFaces &&
+                faces.map((face, i) => (
+                  <div
+                    key={i}
+                    className="absolute border-2 border-solid border-white"
+                    style={boundingBoxStyle(
+                      face,
+                      d3
+                        .scaleLinear()
+                        .range([
+                          0,
+                          imageContainerRef.current.getBoundingClientRect()
+                            .width,
+                        ])
+                        .domain([0, imageRef.current.naturalWidth])
+                    )}
+                  />
+                ))}
 
-        <img ref={imageContainerRef} src={imagePath} />
-      </div>
+              <img ref={imageContainerRef} src={item.original} />
+            </div>
+          );
+        }}
+      />
     </div>
   );
 }
