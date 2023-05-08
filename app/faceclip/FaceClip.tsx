@@ -13,15 +13,22 @@ const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
 
 const estimationConfig = { flipHorizontal: false } as const;
 
-const photoList = ["/woman.png", "/boy.png"];
+const imageList = ["/woman.png", "/boy.png"];
 export function FaceClip() {
   const imageRef = React.useRef<HTMLImageElement>();
   const detectorPromiseRef =
     React.useRef<Promise<faceDetection.FaceDetector>>();
   const imageContainerRef = React.useRef<HTMLImageElement>();
-  const [imagePath, setImagePath] = React.useState(photoList[0]);
+  const [imagePath, setImagePath] = React.useState(imageList[0]);
 
-  const [faces, setFaces] = React.useState<faceDetection.Face[]>([]);
+  const [images, setImages] = React.useState<
+    { img: HTMLImageElement; faces: faceDetection.Face[] }[]
+  >([]);
+  const faces = React.useMemo(
+    () =>
+      images.flatMap(({ img, faces }) => faces.map((face) => ({ img, face }))),
+    [images]
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -29,24 +36,30 @@ export function FaceClip() {
         detectorPromiseRef.current =
           detectorPromiseRef.current || createDetector();
 
-        const [img, detector] = await Promise.all([
-          createImageNodeFromURL(imagePath),
-          detectorPromiseRef.current,
-        ]);
+        let resolvedImages = [];
 
-        imageRef.current = img;
-        const faces = await detector.estimateFaces(img, estimationConfig);
-        setFaces(faces);
+        for (let imagePath of imageList) {
+          const [img, detector] = await Promise.all([
+            createImageNodeFromURL(imagePath),
+            detectorPromiseRef.current,
+          ]);
+
+          const faces = await detector.estimateFaces(img, estimationConfig);
+          resolvedImages.push({ img, faces });
+        }
+
+        setImages(resolvedImages);
       } catch (error) {
-        setFaces([]);
+        console.error(error);
+        setImages([]);
       }
     })();
-  }, [imagePath]);
+  }, [setImages]);
 
   const hasFaces = Boolean(faces.length);
 
   React.useEffect(() => {
-    faces.forEach((face, index) => {
+    faces.forEach(({ face, img }, index) => {
       const svg = d3.select(`svg#faceSvg-${index}`);
       const image = svg.select("image");
 
@@ -58,7 +71,7 @@ export function FaceClip() {
       svg.attr("width", 150);
       svg.attr("height", 150);
 
-      const imageNaturalWidth = imageRef.current.naturalWidth;
+      const imageNaturalWidth = img.naturalWidth;
 
       image.attr("width", `${scale(imageNaturalWidth)}px`);
       image.attr("y", scale(-boundingBoxStyle(face).top));
@@ -67,11 +80,11 @@ export function FaceClip() {
   }, [faces]);
 
   return (
-    <div>
+    <div className="flex h-[100vh] flex-col justify-between">
       <h1>Face Clip</h1>
 
-      <div className="mt-8 flex flex-wrap p-3">
-        {faces.map((face, index) => (
+      <div className="mt-8 flex  flex-col flex-wrap overflow-x-auto p-3">
+        {faces.map(({ img }, index) => (
           <svg
             key={index}
             width="100mm"
@@ -92,53 +105,59 @@ export function FaceClip() {
               </clipPath>
             </defs>
 
-            {hasFaces && imageRef.current && (
+            {img && (
               <image
-                width={`${imageRef.current.getBoundingClientRect().width}px`}
+                width={`${img.getBoundingClientRect().width}px`}
                 clipPath="url(#clipPath)"
                 preserveAspectRatio="none"
-                xlinkHref={imagePath}
+                xlinkHref={img.src}
               />
             )}
           </svg>
         ))}
       </div>
+      <div className="flex h-[50vh]">
+        <ImageGallery
+          items={images.map(({ img, faces }) => ({
+            original: img.src,
+            img,
+            faces,
+            thumbnail: img.src,
+          }))}
+          onSlide={(index) => setImagePath(imageList[index])}
+          showFullscreenButton={false}
+          thumbnailPosition="top"
+          showThumbnails={false}
+          renderItem={(item) => {
+            const { img, faces } = item;
 
-      <ImageGallery
-        items={photoList.map((src) => ({
-          original: src,
-          thumbnail: src,
-        }))}
-        onSlide={(index) => setImagePath(photoList[index])}
-        showFullscreenButton={false}
-        thumbnailPosition="top"
-        renderItem={(item) => {
-          return (
-            <div className="relative">
-              {hasFaces &&
-                faces.map((face, i) => (
-                  <div
-                    key={i}
-                    className="absolute border-2 border-solid border-white"
-                    style={boundingBoxStyle(
-                      face,
-                      d3
-                        .scaleLinear()
-                        .range([
-                          0,
-                          imageContainerRef.current.getBoundingClientRect()
-                            .width,
-                        ])
-                        .domain([0, imageRef.current.naturalWidth])
-                    )}
-                  />
-                ))}
+            return (
+              <div className="relative">
+                {Boolean(faces.length && imageContainerRef.current) &&
+                  faces.map((face, i) => (
+                    <div
+                      key={i}
+                      className="absolute border-2 border-solid border-white"
+                      style={boundingBoxStyle(
+                        face,
+                        d3
+                          .scaleLinear()
+                          .range([
+                            0,
+                            imageContainerRef.current.getBoundingClientRect()
+                              .width,
+                          ])
+                          .domain([0, img.naturalWidth])
+                      )}
+                    />
+                  ))}
 
-              <img ref={imageContainerRef} src={item.original} />
-            </div>
-          );
-        }}
-      />
+                <img ref={imageContainerRef} src={item.original} />
+              </div>
+            );
+          }}
+        />
+      </div>
     </div>
   );
 }
