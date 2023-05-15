@@ -13,8 +13,6 @@ import produce from "immer";
 
 const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
 
-const estimationConfig = { flipHorizontal: false } as const;
-
 const imageList = ["mona_lisa.jpg", "/woman.png", "/boy.png"];
 
 type ImageWithFaces = { img: HTMLImageElement; faces: faceDetection.Face[] };
@@ -41,7 +39,9 @@ export function FaceClip() {
         createImageNodeFromURL(url),
         detectorPromiseRef.current,
       ]);
-      const faces = await detector.estimateFaces(img, estimationConfig);
+      const faces = await detector.estimateFaces(img, {
+        flipHorizontal: false,
+      });
       resolvedImages.push({ img, faces });
     }
 
@@ -99,9 +99,13 @@ export function FaceClip() {
     [createImages, images]
   );
 
-  React.useEffect(() => {
+  const slideToIndex = (index) => {
     // @ts-expect-error
-    galleryRef.current?.slideToIndex(images.length - 1);
+    galleryRef.current?.slideToIndex(index);
+  };
+
+  React.useEffect(() => {
+    slideToIndex(images.length - 1);
   }, [images]);
 
   const currentImage = images[currentIndex];
@@ -112,8 +116,8 @@ export function FaceClip() {
       {Boolean(currentImage?.faces.length && displayedImageNode) &&
         currentImage.faces.map((face, faceIndex) => (
           <div
-            key={`${currentIndex}-${faceIndex}`}
-            className="pointer-events-none absolute z-10 border-2 border-solid border-white"
+            key={faceIndex}
+            className="pointer-events-none absolute z-10 rounded-full border-2 border-solid border-white opacity-60 transition-all duration-300"
             style={boundingBoxStyle({
               img: currentImage.img,
               face,
@@ -133,6 +137,9 @@ export function FaceClip() {
               viewBox="0 0 100 100"
               version="1.1"
               id={`faceSvg-${index}`}
+              onClick={() => {
+                slideToIndex(images.findIndex((image) => image.img === img));
+              }}
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
@@ -204,6 +211,7 @@ function createDetector(): Promise<faceDetection.FaceDetector> {
   return faceDetection.createDetector(model, {
     runtime: "mediapipe",
     solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_detection",
+    modelType: "full",
     maxFaces: 20,
   });
 }
