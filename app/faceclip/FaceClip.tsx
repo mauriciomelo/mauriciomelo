@@ -26,7 +26,9 @@ export function FaceClip() {
   const [images, setImages] = React.useState<ImageWithFaces[]>([]);
   const faces = React.useMemo(
     () =>
-      images.flatMap(({ img, faces }) => faces.map((face) => ({ img, face }))),
+      images
+        .flatMap(({ img, faces }) => faces.map((face) => ({ img, face })))
+        .reverse(),
     [images]
   );
 
@@ -80,16 +82,10 @@ export function FaceClip() {
     });
   }, [faces]);
 
-  const handleImageUpload = React.useCallback<
-    React.ChangeEventHandler<HTMLInputElement>
-  >(
-    (event) => {
-      const { files } = event.target;
-
+  const addFiles = React.useCallback(
+    (files: File[]) => {
       if (files.length) {
-        const urlList = Array.from(files).map((file) =>
-          URL.createObjectURL(file)
-        );
+        const urlList = files.map((file) => URL.createObjectURL(file));
         createImages(urlList).then((newImages) => {
           const updatedImages = images.concat(newImages);
           setImages(updatedImages);
@@ -97,6 +93,16 @@ export function FaceClip() {
       }
     },
     [createImages, images]
+  );
+
+  const handleImageUpload = React.useCallback<
+    React.ChangeEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      const { files } = event.target;
+      addFiles(Array.from(files));
+    },
+    [addFiles]
   );
 
   const slideToIndex = (index) => {
@@ -111,8 +117,28 @@ export function FaceClip() {
   const currentImage = images[currentIndex];
   const displayedImageNode = imageContainerRef.current[currentIndex];
 
+  const dropHandler: React.DragEventHandler<HTMLDivElement> = React.useCallback(
+    (event) => {
+      event.preventDefault();
+
+      if (event.dataTransfer.items) {
+        const files = Array.from(event.dataTransfer.items)
+          .filter((item) => item.kind === "file")
+          .map((item) => item.getAsFile());
+        addFiles(files);
+      } else {
+        addFiles(Array.from(event.dataTransfer.files));
+      }
+    },
+    [addFiles]
+  );
+
+  const dragOverHandler = React.useCallback((event) => {
+    event.preventDefault();
+  }, []);
+
   return (
-    <div>
+    <div onDrop={dropHandler} onDragOver={dragOverHandler}>
       {Boolean(currentImage?.faces.length && displayedImageNode) &&
         currentImage.faces.map((face, faceIndex) => (
           <div
