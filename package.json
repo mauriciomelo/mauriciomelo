@@ -45,7 +45,6 @@
     "csvtojson": "^2.0.10",
     "d3": "^6.7.0",
     "deep-object-diff": "^1.1.0",
-    "electron": "^10.1.5",
     "eslint-config-next": "^13.3.0",
     "flat": "^5.0.2",
     "html2canvas": "^1.1.4",
@@ -60,7 +59,7 @@
     "react-markdown": "^7.0.0",
     "react-spring": "^9.2.3",
     "styled": "^1.0.0",
-    "three": "^0.151.3"
+    "three": "^0.154.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
