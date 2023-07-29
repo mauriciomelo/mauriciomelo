@@ -10,7 +10,9 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
   const [spine, spineRef] = useImageUrl([props.book.title]);
 
   React.useEffect(() => {
-    props?.onChange?.({ ...props.book, cover, spine, backCover: cover });
+    if (cover && spine && props.onChange) {
+      props.onChange({ ...props.book, cover, spine, backCover: cover });
+    }
   }, [cover, props, spine]);
 
   const [title, subtitle] = props.book.title.split(": ");
@@ -18,8 +20,12 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
   const color = "gold";
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}>
+    <Box
+      component="div"
+      sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}
+    >
       <Box
+        component="div"
         ref={spineRef}
         sx={{
           color,
@@ -34,6 +40,7 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
         }}
       >
         <Box
+          component="div"
           sx={{
             width: "23cm",
             transformOrigin: "bottom left",
@@ -46,6 +53,7 @@ export const CoverMaker = React.memo((props: CoverMakerProps) => {
       </Box>
 
       <Box
+        component="div"
         ref={captureRef}
         sx={{
           p: 4,

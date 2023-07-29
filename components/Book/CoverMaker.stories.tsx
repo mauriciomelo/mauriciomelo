@@ -44,10 +44,10 @@ function Media(props) {
   const [images, setImages] = React.useState<CoverProps>();
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "row" }}>
-      <Box marginX={2}>
+    <Box component="div" sx={{ display: "flex", flexDirection: "row" }}>
+      <Box component="div" marginX={2}>
         <Typography variant="h4">3D</Typography>
-        <Box sx={{ width: "18cm", height: "25cm" }}>
+        <Box component="div" sx={{ width: "18cm", height: "25cm" }}>
           <Setup cameraPosition={[0, 0, 20]}>
             <Book
               leather
@@ -57,14 +57,14 @@ function Media(props) {
           </Setup>
         </Box>
       </Box>
-      <Box marginX={2}>
+      <Box component="div" marginX={2}>
         <Typography variant="h4">Image</Typography>
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Box component="div" sx={{ display: "flex", flexDirection: "row" }}>
           <img src={images?.spine} />
           <img src={images?.cover} />
         </Box>
       </Box>
-      <Box marginX={2}>
+      <Box component="div" marginX={2}>
         <Typography variant="h4">Original</Typography>
         <CoverMaker book={props.book} onChange={setImages} />
       </Box>

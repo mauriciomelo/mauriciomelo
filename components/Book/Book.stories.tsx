@@ -151,19 +151,24 @@ export function RoomSt({
   ...rest
 }: typeof defaultStoryArgs) {
   const [books, setBooks] = React.useState(buildBooks(booksNumber));
-  const [editBook, setEditBook] =
-    React.useState<(EditBookProps & BookEditMode) | null>(null);
+  const [editBook, setEditBook] = React.useState<
+    (EditBookProps & BookEditMode) | null
+  >(null);
 
   const handleEdit = React.useCallback(
-    (book: EditBookProps) => {
+    (book: EditBookProps & BookEditMode) => {
       setEditBook((prev) => ({ ...prev, ...book }));
     },
     [editBook]
   );
 
   const handleEditClose = React.useCallback(() => {
+    if (!editBook) {
+      return;
+    }
     const nextState = produce(books, (draft) => {
       const index = books.findIndex((b) => b.isbn === editBook.isbn);
+      // @ts-expect-error
       editBook.position = undefined;
       draft[index] = editBook;
     });
@@ -189,6 +194,7 @@ export function RoomSt({
     <>
       {editBook && (
         <Box
+          component="div"
           bgcolor="rgba(0,0,0, .5)"
           position="absolute"
           display="flex"
@@ -201,7 +207,7 @@ export function RoomSt({
           p={4}
           style={{ backdropFilter: "blur(15px)" }}
         >
-          <Box m="auto">
+          <Box component="div" m="auto">
             <EditBook
               key={editBook.isbn}
               book={editBook}
@@ -216,6 +222,7 @@ export function RoomSt({
         <StoryControls {...rest}>
           <Room
             books={books}
+            // @ts-expect-error
             editBook={editBook}
             onSelect={handleSelectBook}
             coverRotation={coverRotation}

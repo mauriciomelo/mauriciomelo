@@ -20,10 +20,11 @@ const Playground = () => {
   };
 
   return (
-    <Box>
+    <div>
       <Grid container>
         <Grid xs={6} item>
           <Box
+            component="div"
             sx={{
               position: "absolute",
               left: 0,
@@ -37,7 +38,7 @@ const Playground = () => {
         </Grid>
 
         <Grid xs={6} item>
-          <Box sx={{ height: "100vh" }}>
+          <Box component="div" sx={{ height: "100vh" }}>
             <Setup cameraPosition={[0, 0, 20]}>
               {books.map((b, i) => (
                 <Book leather key={b.isbn} {...b} position={[0, i * 30, 0]} />
@@ -46,7 +47,7 @@ const Playground = () => {
           </Box>
         </Grid>
       </Grid>
-    </Box>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ElementRef } from "react";
 import { Box } from "@mui/material";
 import JSONEditor from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.min.css";
@@ -9,7 +9,7 @@ export type EditorProps = {
   onChange?: (changes: unknown) => void;
 };
 export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
-  const containerRef = React.useRef();
+  const containerRef = React.useRef<React.ElementRef<"div">>();
   const editorRef = React.useRef<any>();
 
   React.useEffect(() => {
@@ -33,6 +33,7 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
 
   return (
     <Box
+      component="div"
       sx={{
         p: 2,
         backgroundColor: "#0f0f0f",
@@ -60,6 +61,7 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
         },
       }}
     >
+      {/* @ts-expect-error */}
       <div ref={containerRef}></div>
     </Box>
   );

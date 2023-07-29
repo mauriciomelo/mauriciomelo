@@ -29,7 +29,7 @@
     "@octokit/core": "^3.5.1",
     "@react-hook/debounce": "^4.0.0",
     "@react-spring/three": "^9.7.2",
-    "@react-three/drei": "^9.65.5",
+    "@react-three/drei": "^9.80.0",
     "@react-three/fiber": "^8.12.2",
     "@react-three/flex": "^1.0.1",
     "@tensorflow-models/face-detection": "^1.0.1",
@@ -50,7 +50,7 @@
     "html2canvas": "^1.1.4",
     "immer": "^9.0.5",
     "jsoneditor": "^9.5.3",
-    "next": "^13.3.0",
+    "next": "^13.4.12",
     "ramda": "^0.27.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -89,7 +89,7 @@
     "storybook": "^7.0.6",
     "tailwindcss": "^3.3.1",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.0.4",
+    "typescript": "^5.1.6",
     "util": "^0.12.5",
     "webpack": "^5.50.0"
   }

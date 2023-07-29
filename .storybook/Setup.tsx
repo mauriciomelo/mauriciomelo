@@ -17,7 +17,7 @@ export function Setup({
   const virtualCamera = React.useRef<THREE.Camera>();
 
   return (
-    <Box sx={{ bgcolor: "black", height: "100%" }}>
+    <Box component="div" sx={{ bgcolor: "black", height: "100%" }}>
       <Canvas
         shadows
         camera={{

@@ -20,14 +20,15 @@ export enum Rotation {
   Cover = Math.PI / 2,
 }
 export function Book(props: BookProps) {
+  const defaultTexture = "";
   const {
     position,
     width,
     height,
     depth,
-    cover,
-    backCover,
-    spine,
+    cover = defaultTexture,
+    backCover = defaultTexture,
+    spine = defaultTexture,
     rotation,
     leather,
   } = props;

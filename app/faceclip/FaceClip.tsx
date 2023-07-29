@@ -20,7 +20,7 @@ export function FaceClip() {
   const galleryRef = React.useRef();
   const detectorPromiseRef =
     React.useRef<Promise<faceDetection.FaceDetector>>();
-  const imageContainerRef = React.useRef<HTMLImageElement[]>([]);
+  const imageContainerRef = React.useRef<(HTMLImageElement | null)[]>([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const [images, setImages] = React.useState<ImageWithFaces[]>([]);
@@ -77,8 +77,8 @@ export function FaceClip() {
       const imageNaturalWidth = img.naturalWidth;
 
       image.attr("width", `${scale(imageNaturalWidth)}px`);
-      image.attr("y", scale(-expandFaceBox(face.box).yMin));
-      image.attr("x", scale(-expandFaceBox(face.box).xMin));
+      image.attr("y", scale(-expandFaceBox(face.box).yMin) || 0);
+      image.attr("x", scale(-expandFaceBox(face.box).xMin) || 0);
     });
   }, [faces]);
 
@@ -100,7 +100,7 @@ export function FaceClip() {
   >(
     (event) => {
       const { files } = event.target;
-      addFiles(Array.from(files));
+      addFiles(Array.from(files || []));
     },
     [addFiles]
   );
@@ -124,7 +124,7 @@ export function FaceClip() {
       if (event.dataTransfer.items) {
         const files = Array.from(event.dataTransfer.items)
           .filter((item) => item.kind === "file")
-          .map((item) => item.getAsFile());
+          .map((item) => item.getAsFile()) as File[];
         addFiles(files);
       } else {
         addFiles(Array.from(event.dataTransfer.files));
@@ -139,7 +139,8 @@ export function FaceClip() {
 
   return (
     <div onDrop={dropHandler} onDragOver={dragOverHandler}>
-      {Boolean(currentImage?.faces.length && displayedImageNode) &&
+      {!!currentImage?.faces.length &&
+        !!displayedImageNode &&
         currentImage.faces.map((face, faceIndex) => (
           <div
             key={faceIndex}
@@ -282,7 +283,7 @@ function boundingBoxStyle({
   return {
     width: scale(expandedBox.width),
     height: scale(expandedBox.height),
-    left: scale(expandedBox.xMin) + imageNodeClientRect.left,
-    top: scale(expandedBox.yMin) + imageNodeClientRect.top,
+    left: scale(expandedBox.xMin) || 0 + imageNodeClientRect.left,
+    top: scale(expandedBox.yMin) || 0 + imageNodeClientRect.top,
   };
 }

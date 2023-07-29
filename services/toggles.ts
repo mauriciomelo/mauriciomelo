@@ -39,7 +39,7 @@ export function createToggleService(token: string) {
         }
       );
       const response = {
-        sha: data.content.sha,
+        sha: data.content?.sha,
       };
 
       return response;
