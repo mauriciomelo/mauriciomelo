@@ -10,6 +10,7 @@ export function Auth(props) {
 
   return (
     <Box
+      component="div"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -19,7 +20,7 @@ export function Auth(props) {
       <Typography variant="overline">Authenticate</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box marginY={2}>
+        <Box component="div" marginY={2}>
           <Controller
             name="ghToken"
             control={control}
@@ -35,7 +36,7 @@ export function Auth(props) {
           />
         </Box>
 
-        <Box marginY={2}>
+        <Box component="div" marginY={2}>
           <Button type="submit" color="primary">
             submit
           </Button>
