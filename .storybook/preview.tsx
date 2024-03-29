@@ -8,10 +8,6 @@ cache.compat = true;
 import "./index.css";
 import theme from "../src/theme";
 
-export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-};
-
 export const decorators = [
   (Story) => (
     <CacheProvider value={cache}>
