@@ -1,5 +1,6 @@
+"use client";
+import { RoomSt } from "@/components/Book/Book.stories";
 import React from "react";
-import { RoomSt } from "../components/Book/Book.stories";
 
 const BooksPage = () => {
   return <RoomSt />;

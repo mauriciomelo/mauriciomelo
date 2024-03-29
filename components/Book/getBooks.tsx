@@ -19,7 +19,7 @@ async function getBooks() {
     responseType: "text",
   });
   const json = await csv().fromString(data);
-  const parseIsbn = (str) => str.replace(/"|=|\\/g, "") || undefined;
+  const parseIsbn = (str: string) => str.replace(/"|=|\\/g, "") || undefined;
   const books = json.map((raw) => {
     const isbn = parseIsbn(raw.ISBN13) || parseIsbn(raw.ISBN);
 
@@ -37,7 +37,7 @@ async function getBooks() {
   return booksWithId;
 }
 
-export function parseDimentions(dimentions) {
+export function parseDimentions(dimentions: string) {
   const [width, depth, height] = dimentions
     .replace(" cm", "")
     .split("x")

@@ -29,7 +29,7 @@ export function FaceClip() {
       images
         .flatMap(({ img, faces }) => faces.map((face) => ({ img, face })))
         .reverse(),
-    [images]
+    [images],
   );
 
   const createImages = React.useCallback(async (urlList: string[]) => {
@@ -92,7 +92,7 @@ export function FaceClip() {
         });
       }
     },
-    [createImages, images]
+    [createImages, images],
   );
 
   const handleImageUpload = React.useCallback<
@@ -102,10 +102,10 @@ export function FaceClip() {
       const { files } = event.target;
       addFiles(Array.from(files || []));
     },
-    [addFiles]
+    [addFiles],
   );
 
-  const slideToIndex = (index) => {
+  const slideToIndex = (index: number) => {
     // @ts-expect-error
     galleryRef.current?.slideToIndex(index);
   };
@@ -130,12 +130,13 @@ export function FaceClip() {
         addFiles(Array.from(event.dataTransfer.files));
       }
     },
-    [addFiles]
+    [addFiles],
   );
 
-  const dragOverHandler = React.useCallback((event) => {
-    event.preventDefault();
-  }, []);
+  const dragOverHandler: React.DragEventHandler<HTMLDivElement> =
+    React.useCallback((event) => {
+      event.preventDefault();
+    }, []);
 
   return (
     <div onDrop={dropHandler} onDragOver={dragOverHandler}>
@@ -203,7 +204,7 @@ export function FaceClip() {
 
         <div className="flex">
           <ImageGallery
-            ref={galleryRef}
+            ref={galleryRef as any}
             items={images.map(({ img }, index) => ({
               original: img.src,
               thumbnail: img.src,
@@ -217,9 +218,12 @@ export function FaceClip() {
               return (
                 <div className=" relative flex h-[50vh] w-[100vw] items-center justify-center ">
                   <img
-                    ref={(element) =>
-                      (imageContainerRef.current[item.index] = element)
-                    }
+                    ref={(element) => {
+                      // @ts-expect-error
+                      const index = item.index;
+                      imageContainerRef.current[index] = element;
+                      return undefined;
+                    }}
                     alt=""
                     className="max-h-full object-contain"
                     src={item.original}

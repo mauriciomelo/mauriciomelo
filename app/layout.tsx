@@ -1,7 +1,8 @@
+import { PropsWithChildren } from "react";
 import "../styles/globals.css";
 import ThemeRegistry from "./ThemeRegistry";
 
-export default function Layout({ children }) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className="dark ">
       <head>

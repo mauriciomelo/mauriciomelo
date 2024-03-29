@@ -1,5 +1,5 @@
-import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import { Box, Typography } from "@mui/material";
+import React, { ComponentProps } from "react";
 import { Setup } from "../../.storybook/Setup";
 import { Book } from "./Book";
 import { CoverMaker, CoverProps } from "./CoverMaker";
@@ -14,7 +14,7 @@ const book = {
   title: "The Drunkard's Walk: How Randomness Rules Our Lives",
   author: "Leonard Mlodinow",
 };
-export const Cover = (args) => {
+export const Cover = (args: ComponentProps<typeof CoverMaker>) => {
   return <CoverMaker {...args} />;
 };
 
@@ -25,7 +25,7 @@ Cover.args = {
   },
 };
 
-export const SingleTitle = (args) => {
+export const SingleTitle = (args: ComponentProps<typeof CoverMaker>) => {
   return <CoverMaker {...args} />;
 };
 
@@ -36,11 +36,13 @@ SingleTitle.args = {
   },
 };
 
-export const RenderVsTextureVsOriginal = (args) => {
+export const RenderVsTextureVsOriginal = (
+  args: ComponentProps<typeof CoverMaker>,
+) => {
   return <Media {...args} />;
 };
 
-function Media(props) {
+function Media(props: any) {
   const [images, setImages] = React.useState<CoverProps>();
 
   return (

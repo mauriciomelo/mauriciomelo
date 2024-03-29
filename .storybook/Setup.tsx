@@ -5,7 +5,13 @@ import { Box } from "@mui/material";
 import { OrbitControls } from "../components/OrbitControl";
 import { useHelper } from "@react-three/drei";
 
-const { degToRad } = THREE.MathUtils;
+type SetupProps = React.PropsWithChildren<{
+  cameraFov?: 90;
+  cameraPosition?: [number, number, number];
+  lights?: boolean;
+  axesHelper?: boolean;
+  orbitControls?: boolean;
+}>;
 export function Setup({
   children,
   cameraFov = 90,
@@ -13,7 +19,7 @@ export function Setup({
   lights = true,
   axesHelper = true,
   orbitControls = true,
-}) {
+}: SetupProps) {
   const virtualCamera = React.useRef<THREE.Camera>();
 
   return (

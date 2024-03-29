@@ -1,9 +1,9 @@
 import { updatedDiff } from "deep-object-diff";
-import flatten from "flat";
+import { flatten } from "flat";
 import { is } from "ramda";
 
-export function buildMessage(original, updated) {
-  const flattenKeys = flatten(updatedDiff(original, updated));
+export function buildMessage(original: {}, updated: {}) {
+  const flattenKeys = flatten(updatedDiff(original, updated)) as {};
   const entries = Object.entries(flattenKeys);
 
   return entries.map(([key, value]) => propChange(key, value)).join(" & ");

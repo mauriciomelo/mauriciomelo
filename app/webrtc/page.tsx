@@ -45,7 +45,7 @@ export default function WebRTCPage() {
   }, [localDescription]);
 
   const handleAnswerInvite = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target?.files?.[0];
 
@@ -63,8 +63,8 @@ export default function WebRTCPage() {
 
     console.log("uploaded", answer);
   };
-  const handleChangeCounter = (number) => {
-    dataChannel?.send(number);
+  const handleChangeCounter = (number: number) => {
+    dataChannel?.send(number.toString());
     setCounter((count) => count + number);
   };
 
@@ -114,7 +114,7 @@ function Counter({
   value,
 }: {
   value: number;
-  onChange: (number) => void;
+  onChange: (number: number) => void;
 }) {
   return (
     <>
@@ -137,13 +137,14 @@ function useWebRTC({
   const [localConnection, setLocalConnection] =
     React.useState<RTCPeerConnection>();
   const [dataChannel, setDataChannel] = React.useState<RTCDataChannel | null>(
-    null
+    null,
   );
 
   const [localDescription, setLocalDescription] =
     React.useState<RTCSessionDescription | null>();
 
-  const handleDataChannelStatusChange = React.useCallback(function (event) {
+  const handleDataChannelStatusChange = React.useCallback(function () {
+    // @ts-expect-error
     const dataChannel = this;
 
     const state = dataChannel.readyState;
@@ -160,7 +161,7 @@ function useWebRTC({
       channel.onclose = handleDataChannelStatusChange;
       channel.onmessage = onMessage;
     },
-    [handleDataChannelStatusChange, onMessage]
+    [handleDataChannelStatusChange, onMessage],
   );
 
   const createOffer = React.useCallback(() => {

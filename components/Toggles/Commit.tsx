@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, InputAdornment, OutlinedInput } from "@mui/material";
 
-export function Commit(props) {
+export function Commit(props: {
+  handleCommit?: React.FormEventHandler<HTMLFormElement>;
+  message?: string;
+  valid?: boolean;
+  setMessage?: (value: string) => void;
+}) {
   return (
     <form onSubmit={props.handleCommit} autoComplete="off">
       <OutlinedInput

@@ -1,10 +1,15 @@
 import React from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  SubmitHandler,
+  FieldValues,
+} from "react-hook-form";
 
-export function Auth(props) {
+export function Auth(props: { onChange: SubmitHandler<FieldValues> }) {
   const { control, handleSubmit } = useForm({ mode: "onChange" });
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
     props.onChange(data);
   };
 

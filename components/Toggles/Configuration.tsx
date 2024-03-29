@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-export function Configuration(props) {
+export function Configuration(props: any) {
   return (
     <form>
       <TextField

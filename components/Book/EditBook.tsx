@@ -25,9 +25,13 @@ interface EditBookProps {
 
 export function EditBook(props: EditBookProps) {
   const { control, handleSubmit, watch } = useForm({ mode: "onChange" });
+
+  // @ts-expect-error
+
   const onSubmit = (data) => {
     props.onChange?.(buildBook(data));
   };
+  // @ts-expect-error
 
   watch((data: Book) => props.onChange?.(buildBook(data)));
 
@@ -65,9 +69,11 @@ function getDefaultValue(book: Book, fieldName: string): unknown {
   if (fieldName === "dimentions") {
     return `${book.width} x ${book.depth} x ${book.height} cm `;
   }
+  // @ts-expect-error
   return book[fieldName] || "";
 }
 
+// @ts-expect-error
 function buildBook(change) {
   const { dimentions, ...rest } = change;
   return { ...rest, ...parseDimentions(dimentions) };

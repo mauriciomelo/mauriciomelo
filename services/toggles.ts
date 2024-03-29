@@ -6,10 +6,16 @@ export function createToggleService(token: string) {
   });
 
   return {
-    async getToggles({ path, parseJson = true }) {
+    async getToggles({
+      path,
+      parseJson = true,
+    }: {
+      path: string;
+      parseJson?: boolean;
+    }) {
       const { data } = await octokit.request(
         "GET /repos/{owner}/{repo}/contents/{path}",
-        parseFileUri(path)
+        parseFileUri(path),
       );
 
       if (!("content" in data)) {
@@ -23,7 +29,17 @@ export function createToggleService(token: string) {
       return { toggles, sha: data.sha };
     },
 
-    async updateToggles({ path, sha, toggles, message }) {
+    async updateToggles({
+      path,
+      sha,
+      toggles,
+      message,
+    }: {
+      path: string;
+      sha: string;
+      toggles: any;
+      message: string;
+    }) {
       const octokit = new Octokit({
         auth: token,
       });
@@ -36,7 +52,7 @@ export function createToggleService(token: string) {
           message,
           sha,
           content,
-        }
+        },
       );
       const response = {
         sha: data.content?.sha,
@@ -47,7 +63,7 @@ export function createToggleService(token: string) {
   };
 }
 
-function fromBase64(data) {
+function fromBase64(data: string) {
   return Buffer.from(data, "base64");
 }
 

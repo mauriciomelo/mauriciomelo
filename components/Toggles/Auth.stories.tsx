@@ -7,5 +7,5 @@ export default {
 };
 
 export const Main = () => {
-  return <Auth />;
+  return <Auth onChange={() => {}} />;
 };

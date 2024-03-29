@@ -21,16 +21,11 @@ export default {
   component: Setup,
 };
 
-const buildBooks = (n) =>
+const buildBooks = (n: number) =>
   Array(Math.ceil(n / myBooks.length) || 1)
     .fill(myBooks)
     .flat()
     .slice(0, n);
-
-const volume = (x) => x.width * x.height * x.depth;
-const byVolume = (a, b) => volume(b) - volume(a);
-const byHeight = (a, b) => b.height - a.height;
-const byPageCount = (a, b) => b.pages - a.pages;
 
 const book1: BookProps = {
   position: [0, 4.4, 0],
@@ -53,7 +48,10 @@ export function BookSt(args: BookProps) {
 BookSt.args = book1;
 BookSt.storyName = "Book";
 
-function StoryControls({ autoRotate, children }) {
+function StoryControls({
+  autoRotate,
+  children,
+}: React.PropsWithChildren<{ autoRotate: boolean }>) {
   const topLightRef = useLight();
   const keyLightRef = useLight();
   const leftLightRef = useLight();
@@ -159,7 +157,7 @@ export function RoomSt({
     (book: EditBookProps & BookEditMode) => {
       setEditBook((prev) => ({ ...prev, ...book }));
     },
-    [editBook]
+    [editBook],
   );
 
   const handleEditClose = React.useCallback(() => {
@@ -187,7 +185,7 @@ export function RoomSt({
         ],
       });
     },
-    []
+    [],
   );
 
   return (
@@ -211,6 +209,7 @@ export function RoomSt({
             <EditBook
               key={editBook.isbn}
               book={editBook}
+              // @ts-expect-error
               onChange={handleEdit}
               onClose={handleEditClose}
             />

@@ -55,7 +55,7 @@ export default function WebRTCPage() {
   }, [localDescription, appDirHandle, permissionGranted]);
 
   const handleAnswerInvite = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target?.files?.[0];
 
@@ -73,8 +73,8 @@ export default function WebRTCPage() {
 
     console.log("uploaded", answer);
   };
-  const handleChangeCounter = (number) => {
-    dataChannel?.send(number);
+  const handleChangeCounter = (number: number) => {
+    dataChannel?.send(number.toString());
     setCounter((count) => count + number);
   };
 
@@ -151,7 +151,7 @@ export default function WebRTCPage() {
 
     if (offerEntry && !sameOffer) {
       localConnection?.setRemoteDescription(
-        await parseDescriptionFileHandle(offerEntry)
+        await parseDescriptionFileHandle(offerEntry),
       );
 
       createAnswer();
@@ -160,7 +160,7 @@ export default function WebRTCPage() {
 
     if (answerEntry) {
       localConnection?.setRemoteDescription(
-        await parseDescriptionFileHandle(answerEntry)
+        await parseDescriptionFileHandle(answerEntry),
       );
       return;
     }
@@ -232,7 +232,7 @@ function Counter({
   value,
 }: {
   value: number;
-  onChange: (number) => void;
+  onChange: (number: number) => void;
 }) {
   return (
     <>
@@ -255,14 +255,15 @@ function useWebRTC({
   const [localConnection, setLocalConnection] =
     React.useState<RTCPeerConnection>();
   const [dataChannel, setDataChannel] = React.useState<RTCDataChannel | null>(
-    null
+    null,
   );
 
   const [localDescription, setLocalDescription] =
     React.useState<RTCSessionDescription | null>();
 
   const handleDataChannelStatusChange = React.useCallback(
-    function (event) {
+    function () {
+      // @ts-expect-error
       const dataChannel = this as RTCDataChannel;
 
       const state = dataChannel.readyState;
@@ -278,7 +279,7 @@ function useWebRTC({
         localConnection?.restartIce();
       }
     },
-    [localConnection]
+    [localConnection],
   );
 
   const assignDataChannelCallbacks = React.useCallback(
@@ -287,7 +288,7 @@ function useWebRTC({
       channel.onclose = handleDataChannelStatusChange;
       channel.onmessage = onMessage;
     },
-    [handleDataChannelStatusChange, onMessage]
+    [handleDataChannelStatusChange, onMessage],
   );
 
   const createOffer = React.useCallback(() => {

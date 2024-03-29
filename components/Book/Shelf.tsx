@@ -6,18 +6,26 @@ import { publicUrl } from "../../src/publicUrl";
 import { quadrantAngle } from "./quadrantAngle";
 
 const { degToRad } = THREE.MathUtils;
-function Surface({ width, height, depth }) {
+function Surface({
+  width,
+  height,
+  depth,
+}: {
+  width: number;
+  height: number;
+  depth: number;
+}) {
   const texture = useTexture(
-    publicUrl("/textures/wood/Wood_Plywood_Front_001_basecolor.jpg")
+    publicUrl("/textures/wood/Wood_Plywood_Front_001_basecolor.jpg"),
   );
   const roughness = useTexture(
-    publicUrl("/textures/wood/Wood_Plywood_Front_001_roughness.jpg")
+    publicUrl("/textures/wood/Wood_Plywood_Front_001_roughness.jpg"),
   );
   const normal = useTexture(
-    publicUrl("/textures/wood/Wood_Plywood_Front_001_normal.jpg")
+    publicUrl("/textures/wood/Wood_Plywood_Front_001_normal.jpg"),
   );
   const aoTexture = useTexture(
-    publicUrl("/textures/wood/Wood_Plywood_Front_001_ambientOcclusion.jpg")
+    publicUrl("/textures/wood/Wood_Plywood_Front_001_ambientOcclusion.jpg"),
   );
 
   texture.wrapS = THREE.RepeatWrapping;
@@ -40,15 +48,23 @@ function Surface({ width, height, depth }) {
   );
 }
 
+type ShelfProps = {
+  position?: [number, number, number];
+  height?: number;
+  depth?: number;
+  coverRotation?: number;
+  children?: React.ReactNode | React.ReactNode[];
+};
+
 export function Shelf({
   children,
   position = [0, 0, 0],
   height = 2,
   depth = 30,
   coverRotation = 90,
-}) {
+}: ShelfProps) {
   const books = React.Children.toArray(
-    children
+    children,
   ) as React.DetailedReactHTMLElement<any, HTMLElement>[];
   const angle = quadrantAngle(coverRotation);
   const spaceBetween = angle > 0 ? 2 : 0;
@@ -56,7 +72,9 @@ export function Shelf({
   const surfaceWidth = 200;
   const rowHeight = 30;
 
-  const getBookWidth = (book) => {
+  const getBookWidth = (
+    book: React.DetailedReactHTMLElement<any, HTMLElement>,
+  ) => {
     const depthWithAngle = Math.sin(degToRad(angle)) * book.props.depth;
     const widthWithAngle = Math.sin(degToRad(90 - angle)) * book.props.width;
     return spaceBetween + depthWithAngle + widthWithAngle;
@@ -109,8 +127,8 @@ export function Shelf({
 
 function numberOfRows<T>(
   books: T[],
-  getBookWidth: (T) => number,
-  surfaceWidth: number
+  getBookWidth: (book: T) => number,
+  surfaceWidth: number,
 ) {
   let currentRowWidth = 0;
   let rowsCount = 0;

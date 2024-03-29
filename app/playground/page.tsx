@@ -1,17 +1,18 @@
+"use client";
 import { Box, Grid } from "@mui/material";
 import React from "react";
-import { Book } from "../components/Book/Book";
-import { Setup } from "../.storybook/Setup";
-import { myBooks } from "../components/Book/myBooks";
+import { Book } from "../../components/Book/Book";
+import { Setup } from "../../.storybook/Setup";
+import { myBooks } from "../../components/Book/myBooks";
 import produce from "immer";
-import { CoverMaker } from "../components/Book/CoverMaker";
+import { CoverMaker, CoverProps } from "../../components/Book/CoverMaker";
 
 const Playground = () => {
   const [image, setImage] = React.useState();
 
   const [books, setBooks] = React.useState([myBooks[0], myBooks[1]]);
 
-  const hancleMakeCover = (book) => {
+  const hancleMakeCover = (book: CoverProps) => {
     const newBooks = produce(books, (draft) => {
       const bookIndex = draft.findIndex((b) => b.isbn === book.isbn);
       draft[bookIndex] = { ...draft[bookIndex], ...book };

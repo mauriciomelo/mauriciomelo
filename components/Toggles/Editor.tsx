@@ -16,20 +16,23 @@ export function Editor({ json = {}, schema = {}, onChange }: EditorProps) {
     if (editorRef.current) {
       return;
     }
+    if (!containerRef.current) {
+      return;
+    }
 
     const options = {
       mode: "form",
       onChangeJSON: onChange,
-    };
+    } as const;
     editorRef.current = new JSONEditor(containerRef.current, options);
-  }, []);
+  }, [onChange]);
 
   React.useEffect(() => {
     if (editorRef.current) {
       editorRef.current.update(json);
       editorRef.current.setSchema(schema);
     }
-  }, [editorRef.current, json, schema]);
+  }, [json, schema]);
 
   return (
     <Box
