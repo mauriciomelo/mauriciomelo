@@ -3,7 +3,7 @@ import React from "react";
 import { FaceClip } from "./FaceClip";
 
 export default {
-  title: "ComputerVision/FaceClip",
+  title: "AI/FaceClip",
   component: FaceClip,
 };
 

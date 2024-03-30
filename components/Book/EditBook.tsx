@@ -36,7 +36,7 @@ export function EditBook(props: EditBookProps) {
   watch((data: Book) => props.onChange?.(buildBook(data)));
 
   return (
-    <Box component="div" m={5} maxWidth={300}>
+    <Box component="div" m={5} width={450}>
       <Box component="div" marginBottom={4}>
         <Typography variant="overline">Edit Book</Typography>
       </Box>
@@ -54,6 +54,7 @@ export function EditBook(props: EditBookProps) {
                   placeholder={f.placeholder}
                   variant="outlined"
                   inputProps={field}
+                  fullWidth
                 />
               )}
             />

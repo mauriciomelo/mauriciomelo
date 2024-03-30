@@ -5,7 +5,7 @@ import { Book } from "./Book";
 import { CoverMaker, CoverProps } from "./CoverMaker";
 
 export default {
-  title: "BookShelf/CoverMaker",
+  title: "3D/BookShelf/CoverMaker",
   component: CoverMaker,
 };
 

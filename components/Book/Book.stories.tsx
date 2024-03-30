@@ -17,7 +17,7 @@ import { Book as EditBookProps } from "./getBooks";
 import { useFrame } from "@react-three/fiber";
 
 export default {
-  title: "BookShelf/Book",
+  title: "3D/BookShelf/Book",
   component: Setup,
 };
 

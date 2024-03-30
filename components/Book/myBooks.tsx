@@ -23,28 +23,7 @@ export const myBooks: Book[] = [
     backCover:
       "https://images-na.ssl-images-amazon.com/images/I/71ZJ1kgxmgL.jpg",
   },
-  {
-    title: "To Sell is Human: The Surprising Truth About Moving Others",
-    author: "Daniel H. Pink",
-    pages: 272,
-    isbn: "9781594487156",
-    ...parseDimentions("15.75 x 2.54 x 23.62 cm"),
-    cover: "https://images-na.ssl-images-amazon.com/images/I/71NE6CvV6xL.jpg",
-    backCover:
-      "https://images-na.ssl-images-amazon.com/images/I/71HcElLpN-L.jpg",
-  },
 
-  {
-    title:
-      "Never Split the Difference: Negotiating As If Your Life Depended On It",
-    author: "Chris Voss",
-    pages: 274,
-    isbn: "9780062407801",
-    ...parseDimentions("3.3 x 16 x 23.11 cm"),
-    cover: "https://images-na.ssl-images-amazon.com/images/I/81oUPEIf6OL.jpg",
-    backCover:
-      "https://images-na.ssl-images-amazon.com/images/I/81-90tpM84L.jpg",
-  },
   {
     title:
       "Accelerate: Building and Scaling High-Performing Technology Organizations",
@@ -87,16 +66,16 @@ export const myBooks: Book[] = [
       "https://images-na.ssl-images-amazon.com/images/I/715Tyd6W6nL.jpg",
   },
 
-  {
-    title: "Mastering Bitcoin: Unlocking Digital Cryptocurrencies",
-    author: "Andreas M. Antonopoulos",
-    pages: 298,
-    isbn: "9781449374044",
-    ...parseDimentions("17.78 x 1.73 x 23.34 cm"),
-    cover: "https://images-na.ssl-images-amazon.com/images/I/8177WA+ddZL.jpg",
-    backCover:
-      "https://images-na.ssl-images-amazon.com/images/I/51GexiUqHbL.jpg",
-  },
+  // {
+  //   title: "Mastering Bitcoin: Unlocking Digital Cryptocurrencies",
+  //   author: "Andreas M. Antonopoulos",
+  //   pages: 298,
+  //   isbn: "9781449374044",
+  //   ...parseDimentions("17.78 x 1.73 x 23.34 cm"),
+  //   cover: "https://images-na.ssl-images-amazon.com/images/I/8177WA+ddZL.jpg",
+  //   backCover:
+  //     "https://images-na.ssl-images-amazon.com/images/I/51GexiUqHbL.jpg",
+  // },
 
   {
     title: "O Caçador de Pipas",
