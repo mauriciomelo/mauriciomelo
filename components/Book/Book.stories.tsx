@@ -125,7 +125,7 @@ export function ShelfSt({
   return (
     <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
       <StoryControls {...rest}>
-        <Shelf position={[-100, 100, 15]} coverRotation={coverRotation}>
+        <Shelf position={[-100, 100, 15]} bookRotation={coverRotation}>
           {buildBooks(booksNumber).map((book, index) => (
             <Book key={index} {...book} />
           ))}
@@ -273,7 +273,7 @@ function Room({ books, editBook, onSelect, coverRotation }: RoomProps) {
         position={[-100, 0, 15]}
       >
         <FlexBox marginTop={5}>
-          <Shelf coverRotation={coverRotation}>
+          <Shelf bookRotation={coverRotation}>
             {books.map((book, index) => (
               <Book
                 onPointerDown={(e) => onSelect(book, e)}

@@ -52,7 +52,7 @@ type ShelfProps = {
   position?: [number, number, number];
   height?: number;
   depth?: number;
-  coverRotation?: number;
+  bookRotation?: number;
   children?: React.ReactNode | React.ReactNode[];
 };
 
@@ -61,13 +61,13 @@ export function Shelf({
   position = [0, 0, 0],
   height = 2,
   depth = 30,
-  coverRotation = 90,
+  bookRotation = 90,
 }: ShelfProps) {
   const books = React.Children.toArray(
     children,
   ) as React.DetailedReactHTMLElement<any, HTMLElement>[];
-  const angle = quadrantAngle(coverRotation);
-  const spaceBetween = angle > 0 ? 2 : 0;
+  const angle = quadrantAngle(bookRotation);
+  const gap = angle > 0 ? 2 : 0;
 
   const surfaceWidth = 200;
   const rowHeight = 30;
@@ -75,12 +75,15 @@ export function Shelf({
   const getBookWidth = (
     book: React.DetailedReactHTMLElement<any, HTMLElement>,
   ) => {
-    const depthWithAngle = Math.sin(degToRad(angle)) * book.props.depth;
-    const widthWithAngle = Math.sin(degToRad(90 - angle)) * book.props.width;
-    return spaceBetween + depthWithAngle + widthWithAngle;
+    const rotatedDepth = Math.sin(degToRad(90 - angle)) * book.props.depth;
+    const rotatedWidth = Math.sin(degToRad(angle)) * book.props.width;
+    const total = gap + rotatedDepth + rotatedWidth;
+    return total;
   };
 
   const numberOfShelves = numberOfRows(books, getBookWidth, surfaceWidth);
+
+  console.log({ numberOfShelves });
 
   return (
     <>
@@ -97,10 +100,10 @@ export function Shelf({
             flexWrap="no-wrap"
             centerAnchor
             height={rowHeight}
-            marginRight={spaceBetween}
+            marginRight={gap}
             alignItems="flex-end"
             justifyContent="flex-end"
-            rotation={[0, degToRad(coverRotation), 0]}
+            rotation={[0, degToRad(bookRotation), 0]}
             key={index}
           >
             <Box centerAnchor>{child}</Box>
