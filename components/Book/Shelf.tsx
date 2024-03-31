@@ -72,16 +72,20 @@ export function Shelf({
   const surfaceWidth = 200;
   const rowHeight = 30;
 
-  const getBookWidth = (
+  const getBookBoundingBoxWidth = (
     book: React.DetailedReactHTMLElement<any, HTMLElement>,
   ) => {
-    const rotatedDepth = Math.sin(degToRad(90 - angle)) * book.props.depth;
     const rotatedWidth = Math.sin(degToRad(angle)) * book.props.width;
+    const rotatedDepth = Math.cos(degToRad(angle)) * book.props.depth;
     const total = gap + rotatedDepth + rotatedWidth;
     return total;
   };
 
-  const numberOfShelves = numberOfRows(books, getBookWidth, surfaceWidth);
+  const numberOfShelves = numberOfRows(
+    books,
+    getBookBoundingBoxWidth,
+    surfaceWidth,
+  );
 
   console.log({ numberOfShelves });
 
