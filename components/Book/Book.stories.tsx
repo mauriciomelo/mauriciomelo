@@ -3,7 +3,7 @@ import * as THREE from "three";
 import produce from "immer";
 import { useSpring, a } from "@react-spring/three";
 import { Book, BookProps, Rotation } from "./Book";
-import { Setup, useLight } from "../../.storybook/Setup";
+import { Setup, useLight } from "./Setup";
 import { OrbitControls } from "../OrbitControl";
 import { Flex, Box as FlexBox } from "@react-three/flex";
 import { Shelf } from "./Shelf";
@@ -44,7 +44,7 @@ const book1: BookProps = {
 
 export function BookSt(args: BookProps) {
   return (
-    <Setup>
+    <Setup cameraPosition={[10.29, 10.04, 23.06]}>
       <Book {...args} />
     </Setup>
   );
@@ -130,7 +130,7 @@ export const ShelfSt: ShelfStory = {
   argTypes: defaultStoryArgTypes,
   parameters: {
     docs: {
-      story: { inline: false, height: "700px", className: "p-5" },
+      story: { inline: true, height: "700px", className: "p-5 bg-[blue]" },
     },
   },
   render: ({

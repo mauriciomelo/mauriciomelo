@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React, { ComponentProps } from "react";
-import { Setup } from "../../.storybook/Setup";
+import { Setup } from "./Setup";
 import { Book } from "./Book";
 import { CoverMaker, CoverProps } from "./CoverMaker";
 

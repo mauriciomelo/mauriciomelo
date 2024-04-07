@@ -2,7 +2,7 @@
 import { Box, Grid } from "@mui/material";
 import React from "react";
 import { Book } from "../../components/Book/Book";
-import { Setup } from "../../.storybook/Setup";
+import { Setup } from "../../components/Book/Setup";
 import { myBooks } from "../../components/Book/myBooks";
 import produce from "immer";
 import { CoverMaker, CoverProps } from "../../components/Book/CoverMaker";

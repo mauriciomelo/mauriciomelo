@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { Box } from "@mui/material";
-import { OrbitControls } from "../components/OrbitControl";
+import { OrbitControls } from "../OrbitControl";
 import { useHelper } from "@react-three/drei";
 
 type SetupProps = React.PropsWithChildren<{
@@ -20,10 +19,8 @@ export function Setup({
   axesHelper = true,
   orbitControls = true,
 }: SetupProps) {
-  const virtualCamera = React.useRef<THREE.Camera>();
-
   return (
-    <Box component="div" sx={{ bgcolor: "black", height: "100%" }}>
+    <div className="h-[700px] bg-gradient-to-r from-gray-50 to-gray-100">
       <Canvas
         shadows
         camera={{
@@ -33,10 +30,10 @@ export function Setup({
       >
         <React.Suspense fallback={null}>{children}</React.Suspense>
         {lights && <Lights />}
-        {orbitControls && <OrbitControls camera={virtualCamera.current} />}
+        {orbitControls && <OrbitControls />}
         {axesHelper && <axesHelper args={[500]} />}
       </Canvas>
-    </Box>
+    </div>
   );
 }
 
