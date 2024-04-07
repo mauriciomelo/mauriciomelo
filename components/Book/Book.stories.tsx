@@ -15,11 +15,16 @@ import { EditBook } from "./EditBook";
 import { Box } from "@mui/material";
 import { Book as EditBookProps } from "./getBooks";
 import { useFrame } from "@react-three/fiber";
+import type { Meta, StoryObj } from "@storybook/react";
 
-export default {
+const meta: Meta<typeof Setup> = {
   title: "3D/BookShelf/Book",
   component: Setup,
 };
+
+export default meta;
+
+type Story = StoryObj<typeof Setup>;
 
 const buildBooks = (n: number) =>
   Array(Math.ceil(n / myBooks.length) || 1)
@@ -104,43 +109,49 @@ const defaultStoryArgTypes = {
     control: {
       type: "range",
       min: 0,
-      max: 360,
+      max: 90,
     },
   },
 
   booksNumber: {
     control: {
       type: "range",
-      min: 0,
+      min: 1,
       max: 600,
     },
   },
 };
-export function ShelfSt({
-  booksNumber,
-  coverRotation,
-  showAxes,
-  ...rest
-}: typeof defaultStoryArgs) {
-  return (
-    <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
-      <StoryControls {...rest}>
-        <Shelf position={[-100, 100, 15]} bookRotation={coverRotation}>
-          {buildBooks(booksNumber).map((book, index) => (
-            <Book key={index} {...book} />
-          ))}
-        </Shelf>
-      </StoryControls>
-    </Setup>
-  );
-}
 
-ShelfSt.storyName = "Shelf";
+type ShelfStory = StoryObj<typeof defaultStoryArgs>;
 
-ShelfSt.args = defaultStoryArgs;
-ShelfSt.defaultProps = ShelfSt.args;
-
-ShelfSt.argTypes = defaultStoryArgTypes;
+export const ShelfSt: ShelfStory = {
+  name: "Shelf",
+  args: defaultStoryArgs,
+  argTypes: defaultStoryArgTypes,
+  parameters: {
+    docs: {
+      story: { inline: false, height: "700px", className: "p-5" },
+    },
+  },
+  render: ({
+    booksNumber,
+    coverRotation,
+    showAxes,
+    ...rest
+  }: typeof defaultStoryArgs) => {
+    return (
+      <Setup lights={false} orbitControls={false} axesHelper={showAxes}>
+        <StoryControls {...rest}>
+          <Shelf position={[-100, 100, 15]} bookRotation={coverRotation}>
+            {buildBooks(booksNumber).map((book, index) => (
+              <Book key={index} {...book} />
+            ))}
+          </Shelf>
+        </StoryControls>
+      </Setup>
+    );
+  },
+};
 
 export function RoomSt({
   showAxes,

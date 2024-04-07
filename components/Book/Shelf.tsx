@@ -67,7 +67,7 @@ export function Shelf({
     children,
   ) as React.DetailedReactHTMLElement<any, HTMLElement>[];
   const angle = quadrantAngle(bookRotation);
-  const gap = angle > 0 ? 2 : 0;
+  const gap = 2;
 
   const surfaceWidth = 200;
   const rowHeight = 30;
@@ -86,8 +86,6 @@ export function Shelf({
     getBookBoundingBoxWidth,
     surfaceWidth,
   );
-
-  console.log({ numberOfShelves });
 
   return (
     <>

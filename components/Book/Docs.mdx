@@ -1,0 +1,14 @@
+import { Meta, Primary, Controls, Canvas, Story } from "@storybook/blocks";
+import * as BookStories from "./Book.stories";
+import { ShelfDrawing } from "./ShelfDrawing";
+
+<Meta of={BookStories} />
+
+## Bookshelf
+
+<Canvas of={BookStories.ShelfSt} height="800px" />
+<Controls of={BookStories.ShelfSt} />
+
+## Calculating the bounding box of a rotated book
+
+<ShelfDrawing />
