@@ -287,7 +287,7 @@ function boundingBoxStyle({
   return {
     width: scale(expandedBox.width),
     height: scale(expandedBox.height),
-    left: scale(expandedBox.xMin) || 0 + imageNodeClientRect.left,
-    top: scale(expandedBox.yMin) || 0 + imageNodeClientRect.top,
+    left: (scale(expandedBox.xMin) || 0) + imageNodeClientRect.left,
+    top: (scale(expandedBox.yMin) || 0) + imageNodeClientRect.top,
   };
 }
