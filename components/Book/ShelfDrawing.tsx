@@ -1,6 +1,3 @@
-import { Excalidraw } from "@excalidraw/excalidraw";
-import drawing from "./arranging-books.excalidraw.json" assert { type: "json" };
-import svg from "./book-rotation-variants.svg";
 import { SVGProps } from "react";
 
 export function ShelfDrawing() {
