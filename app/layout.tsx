@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
+
 import "../styles/globals.css";
-import ThemeRegistry from "./ThemeRegistry";
+import { Providers } from "./Providers";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
@@ -10,7 +11,7 @@ export default function Layout({ children }: PropsWithChildren) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="dark:text-white">
-        <ThemeRegistry options={{ key: "mui" }}>{children}</ThemeRegistry>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
