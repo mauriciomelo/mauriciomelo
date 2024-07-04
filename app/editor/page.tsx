@@ -41,6 +41,8 @@ export default function EditorPage() {
 
   const engineQuery = useQuery({
     queryKey: ["engine"],
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     queryFn: () =>
       CreateMLCEngine(selectedModel, {
         initProgressCallback: initProgressCallback,
